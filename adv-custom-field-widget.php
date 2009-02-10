@@ -12,7 +12,7 @@ Version History:-
 
 Version Date      Author                 Description
 ======= ========= ====================== ======================================
-0.4     10-Feb-09 Christina Louise Warne FIX - Removal of options now only occurs when the plugin is uninstalled
+0.4     10-Feb-09 Christina Louise Warne FIX - Removal of options now only occurs when the plugin is uninstalled (via uninstall.php)
 										 FIX - Fixed text domain to acf_widget
 ------- --------- ---------------------- --------------------------------------
 0.3     23-Dec-08 Christina Louise Warne ADDED - Add custom field '<KEY>-linkto' and specify a page ID to
@@ -484,10 +484,6 @@ function wp_widget_adv_custom_field_control($widget_args) {
 function wp_widget_adv_custom_field_activation() {
 	add_option( 'widget_adv_custom_field', '', '', 'yes' );
 }
-// Function to delete widget option table the plugin is uninstalled
-function wp_widget_adv_custom_field_uninstall() {
-	delete_option('widget_adv_custom_field');
-}
 
 // Function to initialize the Custom Field Widget: the widget and widget options panel
 function wp_widget_adv_custom_field_register() {
@@ -536,18 +532,9 @@ add_filter( 'adv_custom_field_value', 'wptexturize' );
 // When activating, run the appropriate function
 register_activation_hook( __FILE__, 'wp_widget_adv_custom_field_activation' );
 
-// 0.4 [START] - Change removal of options to occur when the plugin is uninstalled
-//
+// 0.4 [START] - Change removal of options to occur when the plugin is uninstalled via uninstall.php
 // register_deactivation_hook( __FILE__, 'wp_widget_adv_custom_field_deactivation' );
-//
-// Thanks to Jacob Santos for this code snippet which can be found at:-
-// http://www.santosj.name/2008/general/wordpress-27-plugin-uninstall-methods/
-//
-
-if ( function_exists(’register_uninstall_hook’) ) {
-	register_uninstall_hook(__FILE__, 'wp_widget_adv_custom_field_uninstall' );
-}
-
+// Thanks to Jacob Santos for information about the uninstall
 // 0.4 [END]
 
 // Allow localization, if applicable
