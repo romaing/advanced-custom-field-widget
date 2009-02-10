@@ -3,7 +3,7 @@ CONTRIBUTORS: athenaofdelphi, scottwallick
 TAGS: custom field, custom value, custom key, field, value, key, post meta, meta, get_post_meta, widget, sidebar, multiple widgets
 REQUIRES AT LEAST: 2.5
 TESTED UP TO: 2.7
-STABLE TAG: 0.3
+STABLE TAG: 0.4
 
 The Advanced Custom Field Widget is an extension of the Custom Field Widget by Scott Wallick, and displays values of custom field keys.
 
@@ -92,7 +92,10 @@ You can also specify two key fields.  These obey the following rules:-
 *So what does this mean?*  Well, one of the reasons I modified Scott's original plugin was because I wanted to have specific items displayed on the pages they were reviewed on.  That was easy with the original.  And I then wanted to be able to randomly select a reviewed item for display on other pages.  That was also pretty easy, but then I got to thinking... what happens if I review something and I wouldn't recommend it in a million years.  I'd still want to link to it on the review page, but I wouldn't want to cycle it through other pages.  So, I added the secondary key field.  I have a key field called `amazon` and another called `amazon-notrecommended`.  If I want an item to cycle through I pop it in under the `amazon` field, if not, it goes in under the `amazon-notrecommended` field and then only ever gets seen on it's review page.
 
 Version 0.2 added the ability to draw content for the widget from another page.  To use this facility, simply add the custom field 'acfw-linkto' to a page and specify the page ID that contains the content you want to draw in.  When writing a section that will have common sidebar content coming from the widget, you can write once and use many.
+
 Version 0.3 added the ability to draw specific field content for the widget from another page.  To use this facility, simply add the custom field 'KEY-linkto' to a page (where KEY is the name of the custom field the widget is linked to).  So for example, lets say I want to draw content for the field 'amazon' from page 204, I would add the custom field 'amazon-linkto' and set it's value to 204.  This takes precedence over the general 'acfw-linkto' field.
+
+Version 0.4 has changed the deactivation code such that it doesn't delete your settings, instead, settings are now deleted when you uninstall the plugin.  The translation domain has also been changed to 'acf-widget' and a POT file has been produced.
 
 == License ==
 

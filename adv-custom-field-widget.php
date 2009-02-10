@@ -5,13 +5,16 @@ PLUGIN URI: http://athena.outer-reaches.com/wp/index.php/projects/advanced-custo
 DESCRIPTION: Displays the values of specified <a href="http://codex.wordpress.org/Using_Custom_Fields">custom field</a> keys, allowing post- and page-specific meta content in your sidebar. This plugin started life as a plaintxt.org experiment for WordPress by Scott Wallick, but I needed (or wanted) it to do more, so I've created this version which has more functionality than the original.
 AUTHOR: Christina Louise Warne
 AUTHOR URI: http://athena.outer-reaches.com/
-VERSION: 0.3
+VERSION: 0.4
 
 ------------------------------------------------------------------------------------------------------------
 Version History:-
 
 Version Date      Author                 Description
 ======= ========= ====================== ======================================
+0.4     10-Feb-09 Christina Louise Warne FIX - Removal of options now only occurs when the plugin is uninstalled
+										 FIX - Fixed text domain to acf_widget
+------- --------- ---------------------- --------------------------------------
 0.3     23-Dec-08 Christina Louise Warne ADDED - Add custom field '<KEY>-linkto' and specify a page ID to
                                            have the current page load the specified cfield content from the
 										   specified page.  This takes priority over acfw-linkto.
@@ -382,35 +385,35 @@ function wp_widget_adv_custom_field_control($widget_args) {
 	}
 	// Our actual widget options panel
 ?>
-	<p><?php printf( __( 'Enter the custom field key <a href="%s">[?]</a>  to locate in single posts/pages. When found, the corresponding value is displayed along with widget title and text (if provided).', 'cf_widget' ), 'http://codex.wordpress.org/Using_Custom_Fields' ) ?></p>
+	<p><?php printf( __( 'Enter the custom field key <a href="%s">[?]</a>  to locate in single posts/pages. When found, the corresponding value is displayed along with widget title and text (if provided).', 'acf_widget' ), 'http://codex.wordpress.org/Using_Custom_Fields' ) ?></p>
 	<p>
-		<label for="adv-custom-field-key-<?php echo $number; ?>"><?php _e( 'Primary Custom Field Key (required - Used for randomised content):', 'cf_widget' ) ?></label>
+		<label for="adv-custom-field-key-<?php echo $number; ?>"><?php _e( 'Primary Custom Field Key (required - Used for randomised content):', 'acf_widget' ) ?></label>
 		<input id="adv-custom-field-key-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][key]" class="code widefat" type="text" value="<?php echo $key; ?>" /><br />
-		<?php _e( 'The <strong>key</strong> must match <em>exactly</em> as in posts/pages.', 'cf_widget' ) ?>
+		<?php _e( 'The <strong>key</strong> must match <em>exactly</em> as in posts/pages.', 'acf_widget' ) ?>
 	</p>
 	<p>
-		<label for="adv-custom-field-skey-<?php echo $number; ?>"><?php _e( 'Secondary Custom Field Key (optional - Used if no content for primary on single post pages):', 'cf_widget' ) ?></label>
+		<label for="adv-custom-field-skey-<?php echo $number; ?>"><?php _e( 'Secondary Custom Field Key (optional - Used if no content for primary on single post pages):', 'acf_widget' ) ?></label>
 		<input id="adv-custom-field-skey-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][skey]" class="code widefat" type="text" value="<?php echo $skey; ?>" /><br />
-		<?php _e( 'The <strong>key</strong> must match <em>exactly</em> as in posts/pages.', 'cf_widget' ) ?>
+		<?php _e( 'The <strong>key</strong> must match <em>exactly</em> as in posts/pages.', 'acf_widget' ) ?>
 	</p>
 	<p>
-		<label for="adv-custom-field-title-<?php echo $number; ?>"><?php _e( 'Widget Title (optional):', 'cf_widget' ) ?></label>
+		<label for="adv-custom-field-title-<?php echo $number; ?>"><?php _e( 'Widget Title (optional):', 'acf_widget' ) ?></label>
 		<input id="adv-custom-field-title-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][title]" class="widefat" type="text" value="<?php echo $title; ?>" />
 	</p>
 	<p>
-		<label for="adv-custom-field-text-<?php echo $number; ?>"><?php _e( 'Widget Text (optional):', 'cf_widget' ) ?></label>
+		<label for="adv-custom-field-text-<?php echo $number; ?>"><?php _e( 'Widget Text (optional):', 'acf_widget' ) ?></label>
 		<textarea id="adv-custom-field-text-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][text]" class="widefat" rows="5" cols="20"><?php echo $text; ?></textarea>
 	</p>
 	
 	<table border="0" align="center">
 	<tr><td>
 	<p>
-		<label for="adv-custom-field-pretext-<?php echo $number; ?>"><?php _e( 'Widget Pretext (optional):', 'cf_widget' ) ?></label>
+		<label for="adv-custom-field-pretext-<?php echo $number; ?>"><?php _e( 'Widget Pretext (optional):', 'acf_widget' ) ?></label>
 		<textarea id="adv-custom-field-pretext-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][pretext]" class="widefat" rows="5" cols="20"><?php echo $pretext; ?></textarea>
 	</p>
 	</td><td>
 	<p>
-		<label for="adv-custom-field-posttext-<?php echo $number; ?>"><?php _e( 'Widget Posttext (optional):', 'cf_widget' ) ?></label>
+		<label for="adv-custom-field-posttext-<?php echo $number; ?>"><?php _e( 'Widget Posttext (optional):', 'acf_widget' ) ?></label>
 		<textarea id="adv-custom-field-posttext-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][posttext]" class="widefat" rows="5" cols="20"><?php echo $posttext; ?></textarea>
 	</p>
 	</td></tr>
@@ -418,23 +421,23 @@ function wp_widget_adv_custom_field_control($widget_args) {
 	<!-- Fixed Text 1 -->
 	<tr><td>
 	<p>
-		<label for="adv-custom-field-fixedtext1a-<?php echo $number; ?>"><?php _e( 'Fixed Text 1 Always (optional):', 'cf_widget' ) ?></label>
+		<label for="adv-custom-field-fixedtext1a-<?php echo $number; ?>"><?php _e( 'Fixed Text 1 Always (optional):', 'acf_widget' ) ?></label>
 		<textarea id="adv-custom-field-fixedtext1a-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext1a]" class="widefat" rows="5" cols="20"><?php echo $fixedtext1a; ?></textarea>
 	</p>
 	</td><td>
 	<p>
-		<label for="adv-custom-field-fixedtext1m-<?php echo $number; ?>"><?php _e( 'Fixed Text 1 Content Found (optional):', 'cf_widget' ) ?></label>
+		<label for="adv-custom-field-fixedtext1m-<?php echo $number; ?>"><?php _e( 'Fixed Text 1 Content Found (optional):', 'acf_widget' ) ?></label>
 		<textarea id="adv-custom-field-fixedtext1m-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext1m]" class="widefat" rows="5" cols="20"><?php echo $fixedtext1m; ?></textarea>
 	</p>
 	</td></tr>
 	<tr><td>
 	<p>
-		<label for="adv-custom-field-fixedtext1n-<?php echo $number; ?>"><?php _e( 'Fixed Text 1 No Content (optional):', 'cf_widget' ) ?></label>
+		<label for="adv-custom-field-fixedtext1n-<?php echo $number; ?>"><?php _e( 'Fixed Text 1 No Content (optional):', 'acf_widget' ) ?></label>
 		<textarea id="adv-custom-field-fixedtext1n-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext1n]" class="widefat" rows="5" cols="20"><?php echo $fixedtext1n; ?></textarea>
 	</p>
 	</td><td>
 	<p>
-		<label for="adv-custom-field-fixedtext1r-<?php echo $number; ?>"><?php _e( 'Fixed Text 1 Random Content (optional):', 'cf_widget' ) ?></label>
+		<label for="adv-custom-field-fixedtext1r-<?php echo $number; ?>"><?php _e( 'Fixed Text 1 Random Content (optional):', 'acf_widget' ) ?></label>
 		<textarea id="adv-custom-field-fixedtext1r-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext1r]" class="widefat" rows="5" cols="20"><?php echo $fixedtext1r; ?></textarea>
 	</p>
 	</td></tr>
@@ -442,34 +445,34 @@ function wp_widget_adv_custom_field_control($widget_args) {
 	<!-- Fixed Text 2 -->
 	<tr><td>
 	<p>
-		<label for="adv-custom-field-fixedtext2a-<?php echo $number; ?>"><?php _e( 'Fixed Text 2 Always (optional):', 'cf_widget' ) ?></label>
+		<label for="adv-custom-field-fixedtext2a-<?php echo $number; ?>"><?php _e( 'Fixed Text 2 Always (optional):', 'acf_widget' ) ?></label>
 		<textarea id="adv-custom-field-fixedtext2a-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext2a]" class="widefat" rows="5" cols="20"><?php echo $fixedtext2a; ?></textarea>
 	</p>
 	</td><td>
 	<p>
-		<label for="adv-custom-field-fixedtext2m-<?php echo $number; ?>"><?php _e( 'Fixed Text 2 Content Found (optional):', 'cf_widget' ) ?></label>
+		<label for="adv-custom-field-fixedtext2m-<?php echo $number; ?>"><?php _e( 'Fixed Text 2 Content Found (optional):', 'acf_widget' ) ?></label>
 		<textarea id="adv-custom-field-fixedtext2m-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext2m]" class="widefat" rows="5" cols="20"><?php echo $fixedtext2m; ?></textarea>
 	</p>
 	</td></tr>
 	<tr><td>
 	<p>
-		<label for="adv-custom-field-fixedtext2n-<?php echo $number; ?>"><?php _e( 'Fixed Text 2 No Content (optional):', 'cf_widget' ) ?></label>
+		<label for="adv-custom-field-fixedtext2n-<?php echo $number; ?>"><?php _e( 'Fixed Text 2 No Content (optional):', 'acf_widget' ) ?></label>
 		<textarea id="adv-custom-field-fixedtext2n-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext2n]" class="widefat" rows="5" cols="20"><?php echo $fixedtext2n; ?></textarea>
 	</p>
 	</td><td>
 	<p>
-		<label for="adv-custom-field-fixedtext2r-<?php echo $number; ?>"><?php _e( 'Fixed Text 2 Random Content (optional):', 'cf_widget' ) ?></label>
+		<label for="adv-custom-field-fixedtext2r-<?php echo $number; ?>"><?php _e( 'Fixed Text 2 Random Content (optional):', 'acf_widget' ) ?></label>
 		<textarea id="adv-custom-field-fixedtext2r-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext2r]" class="widefat" rows="5" cols="20"><?php echo $fixedtext2r; ?></textarea>
 	</p>
 	</td></tr>
 	</table>
 		
 	<p>
-		<label for="adv-custom-field-dorandomsingle-<?php echo $number; ?>"><?php _e( 'Show random on single post pages:', 'cf_widget' ) ?></label>
+		<label for="adv-custom-field-dorandomsingle-<?php echo $number; ?>"><?php _e( 'Show random on single post pages:', 'acf_widget' ) ?></label>
 		<input type="checkbox" id="adv-custom-field-dorandomsingle-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][dorandomsingle]" <?php if ($dorandomsingle) echo "checked"; ?>>
 	</p>
 	<p>
-		<label for="adv-custom-field-dorandomother-<?php echo $number; ?>"><?php _e( 'Show random on other pages:', 'cf_widget' ) ?></label>
+		<label for="adv-custom-field-dorandomother-<?php echo $number; ?>"><?php _e( 'Show random on other pages:', 'acf_widget' ) ?></label>
 		<input type="checkbox" id="adv-custom-field-dorandomother-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][dorandomother]" <?php if ($dorandomother) echo "checked"; ?>>
 		<input type="hidden" name="widget-adv-custom-field[<?php echo $number; ?>][submit]" value="1" />
 	</p>	
@@ -481,10 +484,11 @@ function wp_widget_adv_custom_field_control($widget_args) {
 function wp_widget_adv_custom_field_activation() {
 	add_option( 'widget_adv_custom_field', '', '', 'yes' );
 }
-// Function to delete widget option table when deactivating this plugin
-function wp_widget_adv_custom_field_deactivation() {
+// Function to delete widget option table the plugin is uninstalled
+function wp_widget_adv_custom_field_uninstall() {
 	delete_option('widget_adv_custom_field');
 }
+
 // Function to initialize the Custom Field Widget: the widget and widget options panel
 function wp_widget_adv_custom_field_register() {
 	// Do we have options? If so, get info as array
@@ -493,7 +497,7 @@ function wp_widget_adv_custom_field_register() {
 	// Variables for our widget
 	$widget_ops = array(
 			'classname'   => 'widget_adv_custom_field',
-			'description' => __( 'Display page/post custom field value for a set key', 'cf_widget' )
+			'description' => __( 'Display page/post custom field value for a set key', 'acf_widget' )
 		);
 	// Variables for our widget options panel
 	$control_ops = array(
@@ -502,7 +506,7 @@ function wp_widget_adv_custom_field_register() {
 			'id_base' => 'adv-custom-field'
 		);
 	// Variable for out widget name
-	$name = __( 'Adv. Custom Field', 'cf_widget' );
+	$name = __( 'Adv. Custom Field', 'acf_widget' );
 	// Assume we have no widgets in play.
 	$id = false;
 	// Since we're dealing with multiple widgets, we much register each accordingly
@@ -528,12 +532,29 @@ function wp_widget_adv_custom_field_register() {
 add_filter( 'adv_custom_field_value', 'convert_chars' );
 add_filter( 'adv_custom_field_value', 'stripslashes' );
 add_filter( 'adv_custom_field_value', 'wptexturize' );
-// When activating/deactivating, run the appropriate function
+
+// When activating, run the appropriate function
 register_activation_hook( __FILE__, 'wp_widget_adv_custom_field_activation' );
-register_deactivation_hook( __FILE__, 'wp_widget_adv_custom_field_deactivation' );
+
+// 0.4 [START] - Change removal of options to occur when the plugin is uninstalled
+//
+// register_deactivation_hook( __FILE__, 'wp_widget_adv_custom_field_deactivation' );
+//
+// Thanks to Jacob Santos for this code snippet which can be found at:-
+// http://www.santosj.name/2008/general/wordpress-27-plugin-uninstall-methods/
+//
+
+if ( function_exists(’register_uninstall_hook’) ) {
+	register_uninstall_hook(__FILE__, 'wp_widget_adv_custom_field_uninstall' );
+}
+
+// 0.4 [END]
+
 // Allow localization, if applicable
-load_plugin_textdomain('cf_widget');
+load_plugin_textdomain('acf-widget', WP_PLUGIN_DIR.'/'.dirname(plugin_basename(__FILE__)));
+
 // Initializes the function to make our widget(s) available
 add_action( 'init', 'wp_widget_adv_custom_field_register' );
+
 // Fin.
 ?>
