@@ -3,7 +3,7 @@ CONTRIBUTORS: athenaofdelphi, scottwallick
 TAGS: custom field, custom value, custom key, field, value, key, post meta, meta, get_post_meta, widget, sidebar, multiple widgets
 REQUIRES AT LEAST: 2.5
 TESTED UP TO: 2.7
-STABLE TAG: 0.3
+STABLE TAG: 0.4
 
 The Advanced Custom Field Widget is an extension of the Custom Field Widget by Scott Wallick, and displays values of custom field keys.
 
@@ -78,9 +78,6 @@ These two fields allow you to specify additional content in certain situations. 
 	
 There are also two options, 'Randomise on single post pages' and 'Randomise on other pages'.  These allow you to have the widget pick random entries for the specified field from published articles, on pages (single and multiple post respectively) that don't have field entries of their own.  It should be noted that the random selections will come only from the primary key field (see below for more information).
 
-
-
-
 At least one section (`FIXEDTEXT1`, `FIXEDTEXT2` or `CUSTOM FIELD`) MUST be present for the widget to be displayed at all.
 
 You can also specify two key fields.  These obey the following rules:-
@@ -92,7 +89,10 @@ You can also specify two key fields.  These obey the following rules:-
 *So what does this mean?*  Well, one of the reasons I modified Scott's original plugin was because I wanted to have specific items displayed on the pages they were reviewed on.  That was easy with the original.  And I then wanted to be able to randomly select a reviewed item for display on other pages.  That was also pretty easy, but then I got to thinking... what happens if I review something and I wouldn't recommend it in a million years.  I'd still want to link to it on the review page, but I wouldn't want to cycle it through other pages.  So, I added the secondary key field.  I have a key field called `amazon` and another called `amazon-notrecommended`.  If I want an item to cycle through I pop it in under the `amazon` field, if not, it goes in under the `amazon-notrecommended` field and then only ever gets seen on it's review page.
 
 Version 0.2 added the ability to draw content for the widget from another page.  To use this facility, simply add the custom field 'acfw-linkto' to a page and specify the page ID that contains the content you want to draw in.  When writing a section that will have common sidebar content coming from the widget, you can write once and use many.
+
 Version 0.3 added the ability to draw specific field content for the widget from another page.  To use this facility, simply add the custom field 'KEY-linkto' to a page (where KEY is the name of the custom field the widget is linked to).  So for example, lets say I want to draw content for the field 'amazon' from page 204, I would add the custom field 'amazon-linkto' and set it's value to 204.  This takes precedence over the general 'acfw-linkto' field.
+
+Version 0.4 has changed the deactivation code such that it doesn't delete your settings, instead, settings are now deleted when you uninstall the plugin.  The translation domain has also been changed to 'acf-widget' and a POT file has been produced.
 
 == License ==
 
@@ -120,13 +120,23 @@ No, if I were, would I have even mentioned that the plugin is based on another? 
 
 If I was into plagiarism, then maybe I would have neglected to mention him, but I'm not.  So credit where it's due.  Scott wrote the original plugin and I'm very grateful to him for doing so, because he did a good job... nice code, with plenty of comments.  As a result, I was able to quickly understand the mechanics involved and modify it to suit my needs, and in the spirit of open source, I'm now making my version available for anyone who wants it.
 
-= Why 'Advanced Custom Field Widget 0.1' and not 'Custom Field Widget 0.2' ? =
+= Why 'Advanced Custom Field Widget' and not 'Custom Field Widget 0.2' ? =
 
 Well, simply...
 
 * It's not my decision what happens with Scott's plugin, so to call it 'Custom Field Widget 0.2' would have been rude
 * It's highly likely I'll modify this version further
 * Compared to the orginal, it is slightly more advanced and provides you with more control
+
+= Uninstalling The Plugin =
+
+I got tired of the plugin deleting it's configuration when it was deactivated.  Now it's available via WordPress.org, I figured I needed to do something about it given that people will use the automatic update feature and watch their configuration disappear as the plugin is deactivated during the upgrade.
+
+So, the plugin now does not delete it's configuration when it is deactivated.  Instead it uses the 'uninstall.php' feature available in WordPress 2.7+ to clean up the options in the database when it is physically deleted, and then only if the user has the ability to activate plugins.
+
+If you find the plugin works with earlier versions of WordPress and you want to clean up your DB when you uninstall it, the options field you are looking for is 'widget_adv_custom_field'.
+
+This uninstall function is new (as of version 0.4), so if it's slightly buggy, please let me know and I'll see if I can fix it up.  I have just spent quite a while getting it to work and making sure it only deletes the config when it is deleted, but I'm only human and I could have got it wrong, so if you lose your config... apologies... profuse apologies.
 
 == Screenshots ==
 
