@@ -2,8 +2,8 @@
 CONTRIBUTORS: athenaofdelphi, scottwallick
 TAGS: custom field, custom value, custom key, field, value, key, post meta, meta, get_post_meta, widget, sidebar, multiple widgets
 REQUIRES AT LEAST: 2.5
-TESTED UP TO: 2.7
-STABLE TAG: 0.4
+TESTED UP TO: 2.7.1
+STABLE TAG: 0.5
 
 The Advanced Custom Field Widget is an extension of the Custom Field Widget by Scott Wallick, and displays values of custom field keys.
 
@@ -93,6 +93,8 @@ Version 0.2 added the ability to draw content for the widget from another page. 
 Version 0.3 added the ability to draw specific field content for the widget from another page.  To use this facility, simply add the custom field 'KEY-linkto' to a page (where KEY is the name of the custom field the widget is linked to).  So for example, lets say I want to draw content for the field 'amazon' from page 204, I would add the custom field 'amazon-linkto' and set it's value to 204.  This takes precedence over the general 'acfw-linkto' field.
 
 Version 0.4 has changed the deactivation code such that it doesn't delete your settings, instead, settings are now deleted when you uninstall the plugin.  The translation domain has also been changed to 'acf-widget' and a POT file has been produced.
+
+Version 0.5 has fixed an issue identified by James Collins.  When displayed under some widgets, ACFW failed to operate as expected.  The cause was modification of the $post variable.  I've added code to ACFW to reinitialise the loop query and the $post variable and it now operates correctly, linking to the page/post being displayed, not the last page/post accessed via the $post variable.
 
 == License ==
 

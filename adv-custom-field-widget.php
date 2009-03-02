@@ -5,13 +5,20 @@ PLUGIN URI: http://athena.outer-reaches.com/wp/index.php/projects/advanced-custo
 DESCRIPTION: Displays the values of specified <a href="http://codex.wordpress.org/Using_Custom_Fields">custom field</a> keys, allowing post- and page-specific meta content in your sidebar. This plugin started life as a plaintxt.org experiment for WordPress by Scott Wallick, but I needed (or wanted) it to do more, so I've created this version which has more functionality than the original.
 AUTHOR: Christina Louise Warne
 AUTHOR URI: http://athena.outer-reaches.com/
-VERSION: 0.4
+VERSION: 0.5
 
 ------------------------------------------------------------------------------------------------------------
 Version History:-
 
 Version Date      Author                 Description
 ======= ========= ====================== ======================================
+0.5	    02-Mar-09 Christina Louise Warne FIX - Fixed issue where some widgets were breaking the widget
+											More specifically, if a widget modified the $post variable,
+											ACFW would display (or not) data relating to the post left
+											in the $post variable.  A fix has been implemented whereby
+											this widget re-initialises the main wp_query used by the main
+											loop and then reinitialises $post with the result
+------- --------- ---------------------- --------------------------------------
 0.4     10-Feb-09 Christina Louise Warne FIX - Removal of options now only occurs when the plugin is uninstalled (via uninstall.php)
 										 FIX - Fixed text domain to acf_widget
 ------- --------- ---------------------- --------------------------------------
@@ -83,10 +90,13 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
 	$cvalue = "";
 	$fixedtext1 = "";
 	$fixedtext2 = "";
+
+	// Version 0.5 Fix
+ 	// Reinitialise the main query and the $post variable
+	global $post,$wp,$wp_the_query;
+	$wp->query_posts();
+	setup_postdata($wp_the_query->post);
 	
-	// Let's set a global to retrieve the post ID
-	global $post;
-			
 	// Are we on a single post page (i.e. a blog entry or a page) or not?
 	if (is_single()||is_page()) {
 		// Look first for say 'externallinks-linkto' allowing us to link up a single
