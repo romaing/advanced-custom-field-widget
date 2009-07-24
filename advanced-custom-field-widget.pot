@@ -8,17 +8,17 @@
 # the License, or (at your option) any later version.
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.4\n"
+"Project-Id-Version: 0.8\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/advanced-custom-field-widget\n"
-"POT-Creation-Date: 2009-02-10 19:28+0000\n"
-"PO-Revision-Date: 2009-02-10 19:28+0000\n"
+"POT-Creation-Date: 2009-07-24 22:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: CHRISTINA LOUISE WARNE <athena@outer-reaches.com>\n"
 "Language-Team: CHRISTINA LOUISE WARNE <athena@outer-reaches.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: adv-custom-field-widget.php:388
+#: adv-custom-field-widget.php:660
 #, php-format
 msgid ""
 "Enter the custom field key <a href=\"%s\">[?]</a>  to locate in single posts/"
@@ -26,80 +26,142 @@ msgid ""
 "title and text (if provided)."
 msgstr ""
 
-#: adv-custom-field-widget.php:390
+#: adv-custom-field-widget.php:662
 msgid "Primary Custom Field Key (required - Used for randomised content):"
 msgstr ""
 
-#: adv-custom-field-widget.php:392 adv-custom-field-widget.php:397
+#: adv-custom-field-widget.php:664 adv-custom-field-widget.php:669
 msgid "The <strong>key</strong> must match <em>exactly</em> as in posts/pages."
 msgstr ""
 
-#: adv-custom-field-widget.php:395
+#: adv-custom-field-widget.php:667
 msgid ""
 "Secondary Custom Field Key (optional - Used if no content for primary on "
 "single post pages):"
 msgstr ""
 
-#: adv-custom-field-widget.php:400
+#: adv-custom-field-widget.php:672
+msgid "Additional Data Field 1:"
+msgstr ""
+
+#: adv-custom-field-widget.php:676
+msgid "Additional Data Field 2:"
+msgstr ""
+
+#: adv-custom-field-widget.php:680
+msgid "Additional Data Field 3:"
+msgstr ""
+
+#: adv-custom-field-widget.php:684
+msgid "Additional Data Field 4:"
+msgstr ""
+
+#: adv-custom-field-widget.php:688
+msgid "Additional Data Field 5:"
+msgstr ""
+
+#: adv-custom-field-widget.php:691
+msgid ""
+"Additional data fields are optional.  They are used to specify custom "
+"fields, the values of which will be loaded into the variables $data1-$data5 "
+"which can be used in the content generator."
+msgstr ""
+
+#: adv-custom-field-widget.php:693
 msgid "Widget Title (optional):"
 msgstr ""
 
-#: adv-custom-field-widget.php:404
+#: adv-custom-field-widget.php:697
 msgid "Widget Text (optional):"
 msgstr ""
 
-#: adv-custom-field-widget.php:411
+#: adv-custom-field-widget.php:704
 msgid "Widget Pretext (optional):"
 msgstr ""
 
-#: adv-custom-field-widget.php:416
+#: adv-custom-field-widget.php:709
 msgid "Widget Posttext (optional):"
 msgstr ""
 
-#: adv-custom-field-widget.php:424
+#: adv-custom-field-widget.php:717
 msgid "Fixed Text 1 Always (optional):"
 msgstr ""
 
-#: adv-custom-field-widget.php:429
+#: adv-custom-field-widget.php:722
 msgid "Fixed Text 1 Content Found (optional):"
 msgstr ""
 
-#: adv-custom-field-widget.php:435
+#: adv-custom-field-widget.php:728
 msgid "Fixed Text 1 No Content (optional):"
 msgstr ""
 
-#: adv-custom-field-widget.php:440
+#: adv-custom-field-widget.php:733
 msgid "Fixed Text 1 Random Content (optional):"
 msgstr ""
 
-#: adv-custom-field-widget.php:448
+#: adv-custom-field-widget.php:741
 msgid "Fixed Text 2 Always (optional):"
 msgstr ""
 
-#: adv-custom-field-widget.php:453
+#: adv-custom-field-widget.php:746
 msgid "Fixed Text 2 Content Found (optional):"
 msgstr ""
 
-#: adv-custom-field-widget.php:459
+#: adv-custom-field-widget.php:752
 msgid "Fixed Text 2 No Content (optional):"
 msgstr ""
 
-#: adv-custom-field-widget.php:464
+#: adv-custom-field-widget.php:757
 msgid "Fixed Text 2 Random Content (optional):"
 msgstr ""
 
-#: adv-custom-field-widget.php:471
+#: adv-custom-field-widget.php:765
+msgid "Content Generator (optional):"
+msgstr ""
+
+#: adv-custom-field-widget.php:768
+msgid ""
+"When displaying the content of a custom field, the widget evals an echo "
+"command that simply outputs the content of the field.  If the Content "
+"Generator field is present, the custom field content is loaded into the "
+"variable $acfw_content and then the evald echo uses the string you put in "
+"here as the basis for the widget content instead.  This allows you to "
+"generate URL's and other content as the string $acfw_content is replaced by "
+"the actual content from the post.  $data1-$data5 are loaded with the values "
+"from the custom key specified by Additional Data Field 1 through 5, if "
+"values exist in the post used as the data source.  You can also use $pageurl "
+"which contains the URL of the post which was the source for the rest of the "
+"widget content."
+msgstr ""
+
+#: adv-custom-field-widget.php:772
 msgid "Show random on single post pages:"
 msgstr ""
 
-#: adv-custom-field-widget.php:475
+#: adv-custom-field-widget.php:776
 msgid "Show random on other pages:"
 msgstr ""
 
-#: adv-custom-field-widget.php:500
+#: adv-custom-field-widget.php:781
+msgid "Do not filter content:"
+msgstr ""
+
+#: adv-custom-field-widget.php:784
+msgid ""
+"Filtering beautifies some of the HTML output by the widget.  For example if "
+"you have picture dimensions WWWxHHH, the x will be converted to a nicer "
+"looking character.  This can result in the failure of links etc.  If this is "
+"occuring, check this box, it will turn off filtering."
+msgstr ""
+
+#: adv-custom-field-widget.php:786
+msgid "Widget index:"
+msgstr ""
+
+#: adv-custom-field-widget.php:806
 msgid "Display page/post custom field value for a set key"
 msgstr ""
 
-#: adv-custom-field-widget.php:509
+#: adv-custom-field-widget.php:815
 msgid "Adv. Custom Field"
 msgstr ""
