@@ -1,17 +1,45 @@
 <?php
 /*
 PLUGIN NAME: Advanced Custom Field Widget
-PLUGIN URI: http://athena.outer-reaches.com/wp/index.php/projects/advanced-custom-field-widget
-DESCRIPTION: Displays the values of specified <a href="http://codex.wordpress.org/Using_Custom_Fields">custom field</a> keys, allowing post- and page-specific meta content in your sidebar. This plugin started life as a plaintxt.org experiment for WordPress by Scott Wallick, but I needed (or wanted) it to do more, so I've created this version which has more functionality than the original.
+PLUGIN URI: http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home
+DESCRIPTION: Displays the values of specified <a href="http://codex.wordpress.org/Using_Custom_Fields">custom field</a> keys, allowing post- and page-specific meta content in your sidebar. This plugin started life as a plaintxt.org experiment for WordPress by Scott Wallick, but I needed (or wanted) it to do more, so I've created this version which has more functionality than the original.  For some detailed instructions about it's use, check out my <a href="http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home">wiki</a>.  To report bugs or make feature requests, visit the Outer Reaches Studios <a href="http://mantis.outer-reaches.co.uk">issue tracker</a>, you will need to signup an account to report issues.
 AUTHOR: Christina Louise Warne
 AUTHOR URI: http://athena.outer-reaches.com/
-VERSION: 0.5
+VERSION: 0.8
 
 ------------------------------------------------------------------------------------------------------------
 Version History:-
 
 Version Date      Author                 Description
 ======= ========= ====================== ======================================
+0.8     17-Jul-09 Christina Louise Warne ADDED - Widget index field.  This field allows you to have multiple
+											widgets on the page all linked to the same field (in that case,
+											only the widget with index 1 will display, even if the content
+											randomiser is selected, widgets with indexes other than 1 will
+											be blocked if there is no multiple linkto field specified.  To
+											use the indexed widgets, all you do is specify the primary key
+											field as you do normally (lets say we have the field AMAZON).
+											Then on the page where you want the multiple widgets, you would
+											specify AMAZON-linkto=x|y|z where x,y and z are the page IDs of
+											the source posts
+										 ADDED - Additional data fields 2 to 5
+										 ADDED - $pagetitle for use in content generator.  Contains title
+											of the source post
+										 FIXED - In some cases, the content generator was leaving slashes in
+											the strings.  I believe it is no longer necessary to 'escape'
+											strings in the custom fields or the content generator as I
+											think it's all handled
+------- --------- ---------------------- --------------------------------------																						
+0.7     26-Jun-09 Christina Louise Warne ADDED - Additional data field 1.  This field does nothing except
+											get loaded from the specified custom field, if it exists.  It
+											is primarily for use in the content generator.  This ones for
+											you Bill.
+------- --------- ---------------------- --------------------------------------																						
+0.6     27-Mar-09 Christina Louise Warne ADDED - Widget 'Content Generator'.  This field allows complex
+											content to be generated with PHP.  Essentially the content is
+											eval'd and the result is dumped into the space where the field
+											content would normally go.
+------- --------- ---------------------- --------------------------------------											
 0.5	    02-Mar-09 Christina Louise Warne FIX - Fixed issue where some widgets were breaking the widget
 											More specifically, if a widget modified the $post variable,
 											ACFW would display (or not) data relating to the post left
@@ -82,6 +110,21 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
 	$ckey  = $options[$number]['key'];
 	$skey  = $options[$number]['skey'];
 		
+	// Version 0.7
+	$data1key = $options[$number]['data1key'];
+	$data1="";
+	$pageurl="";
+	
+	// Version 0.8
+	$data2key = $options[$number]['data2key'];
+	$data3key = $options[$number]['data3key'];
+	$data4key = $options[$number]['data4key'];
+	$data5key = $options[$number]['data5key'];
+	$data2="";
+	$data3="";
+	$data4="";
+	$data5="";
+	
 	$title = apply_filters( 'widget_title', $options[$number]['title'] );
 
 	$text  = apply_filters( 'widget_text', $options[$number]['text'] );
@@ -90,12 +133,16 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
 	$cvalue = "";
 	$fixedtext1 = "";
 	$fixedtext2 = "";
+	$pagetitle = "";
 
 	// Version 0.5 Fix
  	// Reinitialise the main query and the $post variable
 	global $post,$wp,$wp_the_query;
 	$wp->query_posts();
 	setup_postdata($wp_the_query->post);
+	
+	// Version 0.8
+	$blocked=FALSE;
 	
 	// Are we on a single post page (i.e. a blog entry or a page) or not?
 	if (is_single()||is_page()) {
@@ -112,11 +159,43 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
 		// that, otherwise set the date source ID to the current post ID
 		if (!empty($linkto))
 		{
-			$srcpost=$linkto;
+			// Version 0.8
+			if (strpos($linkto,'|')) {
+				$temp=explode('|',$linkto);
+				
+				if (!empty($options[$number]['widgetindex'])) {
+					$sourceindex = $options[$number]['widgetindex']-1;
+				} else {
+					$sourceindex = 0;
+				}
+				if ($sourceindex<0||$sourceindex>=count($temp)) {
+					$sourceindex=0;
+				}	
+				
+				if (isset($temp[$sourceindex])) {
+					$srcpost=$temp[$sourceindex];
+				}
+		
+			} else {
+				
+				$srcpost=$linkto;
+			}
+			
+			//$srcpost=$linkto;
 		}
 		else
 		{
 			$srcpost=$post->ID;
+
+			// Version 0.8 - Restrict indexed widgets to the first one only if we aren't linked
+			if (isset($options[$number]['widgetindex'])) {
+                if ($options[$number]['widgetindex']!="") {
+                    if ($options[$number]['widgetindex']!=1) {
+				        $srcpost=0;
+					    $blocked=TRUE;  // This blocks random content for indexed widgets other than 1
+                    }
+				}
+			} 
 		}
 		
 		// Load the data from the target page
@@ -126,7 +205,31 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
 		if (empty($cvalue)) {
 			// Try loading the main content from the secondary field
 			$cvalue = get_post_meta( $post->ID, $skey, true );
+			$srcpost=$post->ID;
 		}
+		
+		// Version 0.7
+		if ($data1key!="") {
+			$data1=get_post_meta( $srcpost,$data1key,true);
+		}
+		$pageurl=get_permalink($srcpost);
+		
+		// Version 0.8
+		if ($data2key!="") {
+			$data2=get_post_meta($srcpost,$data2key,true);
+		}
+		if ($data3key!="") {
+			$data3=get_post_meta($srcpost,$data3key,true);
+		}
+		if ($data4key!="") {
+			$data4=get_post_meta($srcpost,$data4key,true);
+		}
+		if ($data5key!="") {
+			$data5=get_post_meta($srcpost,$data5key,true);
+		}		
+		
+		$postdata=get_post($srcpost);
+		$pagetitle=$postdata->post_title;
 	
 		// Read the randomisation settings from the configuration
 		$dorandom=!empty($options[$number]['dorandomsingle']);
@@ -144,14 +247,21 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
 	// Load our fixedtext1 and 2 with their 'ALWAYS' values
 	$fixedtext1=$options[$number]['fixedtext1a'];
 	$fixedtext2=$options[$number]['fixedtext2a'];
+	
+	// Version 0.6 - Load our $contentgen field
+	$contentgen=$options[$number]['contentgen'];
+	
+	// Version 0.7 - Filtering control
+	$dontfilter=!empty($options[$number]['dontfilter']);
 		
 	// If we are loading random content
-	if ($dorandom) {
+	if ($dorandom&&!$blocked) {
 		// Randomise our main content
 		$randomlist=$wpdb->get_results(
 			"SELECT
+			    p.id,
 				m.meta_id,
-				m.meta_value 
+				m.meta_value
 			FROM
 				$wpdb->postmeta m,
 				$wpdb->posts p
@@ -164,7 +274,30 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
 			
 		if ($randomlist) {
 			foreach ($randomlist as $metarec) {
-					$cvalue=$metarec->meta_value;
+				$cvalue=$metarec->meta_value;
+					
+				// Version 0.7
+				if ($data1key!="") {
+					$data1=get_post_meta($metarec->id,$data1key,true);
+				}
+				$pageurl=get_permalink($metarec->id);
+				
+				// Version 0.8
+				if ($data2key!="") {
+					$data2=get_post_meta($metarec->id,$data2key,true);
+				}
+				if ($data3key!="") {
+					$data3=get_post_meta($metarec->id,$data3key,true);
+				}
+				if ($data4key!="") {
+					$data4=get_post_meta($metarec->id,$data4key,true);
+				}
+				if ($data5key!="") {
+					$data5=get_post_meta($metarec->id,$data5key,true);
+				}
+				
+				$postdata=get_post($metarec->id);
+				$pagetitle=$postdata->post_title;
 			}
 		}
 			
@@ -198,7 +331,7 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
 			}
 		}
 	}
-		
+	
 	// Apply the widget text filters to our fixed text fields (if they are present)
 	if (!empty($fixedtext1)) {
 		$fixedtext1 = apply_filters( 'widget_text', $fixedtext1 );
@@ -206,8 +339,69 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
 	if (!empty($fixedtext2)) {
 		$fixedtext2 = apply_filters( 'widget_text', $fixedtext2 );
 	}
-		
+
 	if ( !empty($cvalue) || !empty($fixedtext1) || !empty($fixedtext2) ) {
+	
+		// Version 0.6 - Setup and run the Content Generator if it is present
+		$cvalue=str_replace(chr(13).chr(10),chr(10),$cvalue);
+		$cvalue=str_replace(chr(10).chr(13),chr(10),$cvalue);
+		$cvalue=str_replace(chr(10),"\n",$cvalue);
+
+		if (isset($contentgen) && $contentgen!="") {
+			$acfw_content = apply_filters( 'adv_custom_field_value', $cvalue );
+			$contentgen = apply_filters( 'adv_custom_field_value' , $contentgen);
+			
+			// Version 0.7
+			$data1 = apply_filters ( 'adv_custom_field_value', $data1);
+
+			// Version 0.8
+			$data2 = apply_filters ( 'adv_custom_field_value', $data2);
+			$data3 = apply_filters ( 'adv_custom_field_value', $data3);
+			$data4 = apply_filters ( 'adv_custom_field_value', $data4);
+			$data5 = apply_filters ( 'adv_custom_field_value', $data5);
+			
+			$pagetitle = apply_filters ( 'adv_custom_field_value', $pagetitle);
+			$pagetitle = apply_filters ( 'adv_custom_field_value2', $pagetitle);  // Page title would ordinarily be filtered through both by the system, so we should do it
+			
+			if (!$dontfilter) {
+				$acfw_content=apply_filters('adv_custom_field_value2',$acfw_content);
+				$contentgen=apply_filters('adv_custom_field_value2',$contentgen);
+				$data1=apply_filters('adv_custom_field_value2',$data1);
+				
+				// Version 0.8
+				$data2=apply_filters('adv_custom_field_value2',$data2);
+				$data3=apply_filters('adv_custom_field_value2',$data3);
+				$data4=apply_filters('adv_custom_field_value2',$data4);
+				$data5=apply_filters('adv_custom_field_value2',$data5);
+			}
+			
+			$acfw_content = addslashes($acfw_content);
+			$cvalue = addslashes($contentgen);
+			
+			// Version 0.7
+			$data1 = addslashes($data1);
+			$pageurl = addslashes($pageurl);
+			
+			// Version 0.8
+			$data2 = addslashes($data2);
+			$data3 = addslashes($data3);
+			$data4 = addslashes($data4);
+			$data5 = addslashes($data5);
+			$pagetitle = addslashes($pagetitle);
+			
+			$cvalue=str_replace(chr(13).chr(10),chr(10),$cvalue);
+			$cvalue=str_replace(chr(10).chr(13),chr(10),$cvalue);
+			$cvalue=str_replace(chr(10),"\n",$cvalue);
+		} else {
+			$cvalue = apply_filters( 'adv_custom_field_value', $cvalue );
+
+			if (!$dontfilter) {
+				$cvalue=apply_filters('adv_custom_field_value2',$cvalue);
+			}
+			
+			$cvalue = addslashes($cvalue);
+		}
+	
 		// Yes? Then let's make a widget. Open it.
 		echo $before_widget;
 		// Our widget title field is optional; if we have some, show it
@@ -231,11 +425,9 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
 			if ( $pretext ) {
 				echo $pretext;
 			}
-			
-			// Let's apply our filters to the custom field value
-			$cvalue = apply_filters( 'adv_custom_field_value', $cvalue );
-			// Echo the matching custom field value, filtered nicely
-			echo "\n<div class='advcustomvalue'>\n$cvalue\n</div>\n";
+				
+			eval('$cvalue="\n<div class=\"advcustomvalue\">\n'.$cvalue.'\n</div>\n";');
+			echo urldecode(stripslashes($cvalue));
 		
 			if ( $posttext ) {
 				echo $posttext;
@@ -294,6 +486,7 @@ function wp_widget_adv_custom_field_control($widget_args) {
 					unset($options[$widget_number]);
 			}
 		}
+		
 		// If we are returning data via $_POST for updated widget options, save for each widget by widget ID
 		foreach ( (array) $_POST['widget-adv-custom-field'] as $widget_number => $widget_adv_custom_field ) {
 			// If the $_POST data has values for our widget, we'll save them
@@ -320,6 +513,21 @@ function wp_widget_adv_custom_field_control($widget_args) {
 				
 				$dorandomsingle = stripslashes($widget_adv_custom_field['dorandomsingle']);
 				$dorandomother  = stripslashes($widget_adv_custom_field['dorandomother']);
+				
+				// Version 0.6
+				$contentgen = stripslashes($widget_adv_custom_field['contentgen']);
+				
+				// Version 0.7
+				$data1key = stripslashes($widget_adv_custom_field['data1key']);
+				$dontfilter = stripslashes($widget_adv_custom_field['dontfilter']);
+				
+				// Version 0.8
+				$widgetindex = stripslashes($widget_adv_custom_field['widgetindex']);
+				$data2key = stripslashes($widget_adv_custom_field['data2key']);
+				$data3key = stripslashes($widget_adv_custom_field['data3key']);
+				$data4key = stripslashes($widget_adv_custom_field['data4key']);
+				$data5key = stripslashes($widget_adv_custom_field['data5key']);
+				
 			} else {
 				$text = stripslashes(wp_filter_post_kses($widget_adv_custom_field['text']));
 				$pretext = stripslashes(wp_filter_post_kses($widget_adv_custom_field['pretext']));
@@ -336,6 +544,20 @@ function wp_widget_adv_custom_field_control($widget_args) {
 				
 				$dorandomsingle = stripslashes(wp_filter_post_kses($widget_adv_custom_field['dorandomsingle']));
 				$dorandomother  = stripslashes(wp_filter_post_kses($widget_adv_custom_field['dorandomother']));
+				
+				// Version 0.6
+				$contentgen = stripslashes(wp_filter_post_kses($widget_adv_custom_field['contentgen']));
+				
+				// Version 0.7
+				$data1key = stripslashes(wp_filter_post_kses($widget_adv_custom_field['data1key']));
+				$dontfilter = stripslashes(wp_filter_post_kses($widget_adv_custom_field['dontfilter']));
+				
+				// Version 0.8
+				$widgetindex = stripslashes(wp_filter_post_kses($widget_adv_custom_field['widgetindex']));
+				$data2key = stripslashes(wp_filter_post_kses($widget_adv_custom_field['data2key']));
+				$data3key = stripslashes(wp_filter_post_kses($widget_adv_custom_field['data3key']));
+				$data4key = stripslashes(wp_filter_post_kses($widget_adv_custom_field['data4key']));
+				$data5key = stripslashes(wp_filter_post_kses($widget_adv_custom_field['data5key']));
 			}
 			
 			// We're saving as an array, so save the options as such
@@ -346,7 +568,19 @@ function wp_widget_adv_custom_field_control($widget_args) {
 				'skey',
 				'pretext', 'posttext', 'dorandomsingle', 'dorandomother',
 				'fixedtext1r', 'fixedtext1m', 'fixedtext1n', 'fixedtext1a',
-				'fixedtext2r', 'fixedtext2m', 'fixedtext2n', 'fixedtext2a'
+				'fixedtext2r', 'fixedtext2m', 'fixedtext2n', 'fixedtext2a',
+				// Version 0.6
+				'contentgen',
+				// Version 0.7
+				'data1key',
+				'dontfilter',
+				// Version 0.8
+				'widgetindex',
+				'data2key',
+				'data3key',
+				'data4key',
+				'data5key'
+				
 				);
 		}
 		// Update our options in the database
@@ -373,6 +607,20 @@ function wp_widget_adv_custom_field_control($widget_args) {
 		$dorandomsingle = '';
 		$dorandomother  = '';
 		
+		// Version 0.6
+		$contentgen     = '';
+		
+		// Version 0.7
+		$data1key       = '';
+		$dontfilter		= '';
+		
+		// Version 0.8
+		$widgetindex    = '';
+		$data2key       = '';
+		$data3key       = '';
+		$data4key       = '';
+		$data5key       = '';
+		
 		$number = '%i%';
 	// Otherwise, this widget has stored options to return
 	} else {
@@ -392,6 +640,20 @@ function wp_widget_adv_custom_field_control($widget_args) {
 		$fixedtext2a    = format_to_edit($options[$number]['fixedtext2a']);
 		$dorandomsingle = !empty($options[$number]['dorandomsingle']);
 		$dorandomother  = !empty($options[$number]['dorandomother']);
+		
+		// Version 0.6
+		$contentgen     = format_to_edit($options[$number]['contentgen']);
+		
+		// Version 0.7
+		$data1key       = format_to_edit($options[$number]['data1key']);
+		$dontfilter       = !empty($options[$number]['dontfilter']);
+		
+		// Version 0.8
+		$widgetindex   = format_to_edit($options[$number]['widgetindex']);
+		$data2key       = format_to_edit($options[$number]['data2key']);
+		$data3key       = format_to_edit($options[$number]['data3key']);
+		$data4key       = format_to_edit($options[$number]['data4key']);
+		$data5key       = format_to_edit($options[$number]['data5key']);
 	}
 	// Our actual widget options panel
 ?>
@@ -406,6 +668,27 @@ function wp_widget_adv_custom_field_control($widget_args) {
 		<input id="adv-custom-field-skey-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][skey]" class="code widefat" type="text" value="<?php echo $skey; ?>" /><br />
 		<?php _e( 'The <strong>key</strong> must match <em>exactly</em> as in posts/pages.', 'acf_widget' ) ?>
 	</p>
+	<p>
+		<label for="adv-custom-field-data1key-<?php echo $number; ?>"><?php _e( 'Additional Data Field 1:', 'acf_widget' ) ?></label>
+		<input id="adv-custom-field-data1key-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][data1key]" class="code" size="25" type="text" value="<?php echo $data1key; ?>" /><br />
+	</p>
+	<p>
+		<label for="adv-custom-field-data2key-<?php echo $number; ?>"><?php _e( 'Additional Data Field 2:', 'acf_widget' ) ?></label>
+		<input id="adv-custom-field-data2key-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][data2key]" class="code" size="25" type="text" value="<?php echo $data2key; ?>" /><br />
+	</p>
+	<p>
+		<label for="adv-custom-field-data3key-<?php echo $number; ?>"><?php _e( 'Additional Data Field 3:', 'acf_widget' ) ?></label>
+		<input id="adv-custom-field-data3key-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][data3key]" class="code" size="25" type="text" value="<?php echo $data3key; ?>" /><br />
+	</p>
+	<p>
+		<label for="adv-custom-field-data4key-<?php echo $number; ?>"><?php _e( 'Additional Data Field 4:', 'acf_widget' ) ?></label>
+		<input id="adv-custom-field-data4key-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][data4key]" class="code" size="25" type="text" value="<?php echo $data4key; ?>" /><br />
+	</p>
+	<p>
+		<label for="adv-custom-field-data1key-<?php echo $number; ?>"><?php _e( 'Additional Data Field 5:', 'acf_widget' ) ?></label>
+		<input id="adv-custom-field-data1key-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][data5key]" class="code" size="25" type="text" value="<?php echo $data5key; ?>" /><br />
+	</p>
+	<p><?php _e('Additional data fields are optional.  They are used to specify custom fields, the values of which will be loaded into the variables $data1-$data5 which can be used in the content generator.','acf_widget') ?></p>
 	<p>
 		<label for="adv-custom-field-title-<?php echo $number; ?>"><?php _e( 'Widget Title (optional):', 'acf_widget' ) ?></label>
 		<input id="adv-custom-field-title-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][title]" class="widefat" type="text" value="<?php echo $title; ?>" />
@@ -475,6 +758,14 @@ function wp_widget_adv_custom_field_control($widget_args) {
 		<textarea id="adv-custom-field-fixedtext2r-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext2r]" class="widefat" rows="5" cols="20"><?php echo $fixedtext2r; ?></textarea>
 	</p>
 	</td></tr>
+	
+	<!-- Content Generator - Version 0.6 -->
+	<tr><td colspan="2">
+	<p>
+		<label for="adv-custom-field-contentgen-<?php echo $number; ?>"><?php _e('Content Generator (optional):','acf_widget') ?></label>
+		<textarea id="adv-custom-field-contentgen-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][contentgen]" rows="5" cols="40" class="code widefat"><?php echo $contentgen; ?></textarea>
+	</p>
+	<p><?php _e("When displaying the content of a custom field, the widget evals an echo command that simply outputs the content of the field.  If the Content Generator field is present, the custom field content is loaded into the variable \$acfw_content and then the evald echo uses the string you put in here as the basis for the widget content instead.  This allows you to generate URL's and other content as the string \$acfw_content is replaced by the actual content from the post.  \$data1-\$data5 are loaded with the values from the custom key specified by Additional Data Field 1 through 5, if values exist in the post used as the data source.  You can also use \$pageurl which contains the URL of the post which was the source for the rest of the widget content.",'acf_widget') ?></p>
 	</table>
 		
 	<p>
@@ -486,6 +777,15 @@ function wp_widget_adv_custom_field_control($widget_args) {
 		<input type="checkbox" id="adv-custom-field-dorandomother-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][dorandomother]" <?php if ($dorandomother) echo "checked"; ?>>
 		<input type="hidden" name="widget-adv-custom-field[<?php echo $number; ?>][submit]" value="1" />
 	</p>	
+	<p>
+		<label for="adv-custom-field-dontfilter-<?php echo $number; ?>"><?php _e( 'Do not filter content:', 'acf_widget' ) ?></label>
+		<input type="checkbox" id="adv-custom-field-dontfilter-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][dontfilter]" <?php if ($dontfilter) echo "checked"; ?>>
+	</p>
+	<p><?php _e("Filtering beautifies some of the HTML output by the widget.  For example if you have picture dimensions WWWxHHH, the x will be converted to a nicer looking character.  This can result in the failure of links etc.  If this is occuring, check this box, it will turn off filtering.",'acf_widget') ?></p>
+	<p>
+		<label for="adv-custom-field-widgetindex-<?php echo $number; ?>"><?php _e( 'Widget index:', 'acf_widget' ) ?></label>
+		<input maxlength="5" size="5" id="adv-custom-field-widgetindex-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][widgetindex]" class="code" type="text" value="<?php echo $widgetindex; ?>" />
+	</p>
 	
 <?php
 	// And we're finished with our widget options panel
@@ -508,7 +808,7 @@ function wp_widget_adv_custom_field_register() {
 	// Variables for our widget options panel
 	$control_ops = array(
 			'width'   => 750,
-			'height'  => 400,
+			'height'  => 450,
 			'id_base' => 'adv-custom-field'
 		);
 	// Variable for out widget name
@@ -537,7 +837,7 @@ function wp_widget_adv_custom_field_register() {
 // Adds filters to custom field values to prettify like other content
 add_filter( 'adv_custom_field_value', 'convert_chars' );
 add_filter( 'adv_custom_field_value', 'stripslashes' );
-add_filter( 'adv_custom_field_value', 'wptexturize' );
+add_filter( 'adv_custom_field_value2', 'wptexturize' );
 
 // When activating, run the appropriate function
 register_activation_hook( __FILE__, 'wp_widget_adv_custom_field_activation' );
@@ -548,7 +848,8 @@ register_activation_hook( __FILE__, 'wp_widget_adv_custom_field_activation' );
 // 0.4 [END]
 
 // Allow localization, if applicable
-load_plugin_textdomain('acf-widget', WP_PLUGIN_DIR.'/'.dirname(plugin_basename(__FILE__)));
+$plugin_dir=dirname(plugin_basename(__FILE__));
+load_plugin_textdomain( 'acf_widget', 'wp-content/plugins/' . $plugin_dir, $plugin_dir );
 
 // Initializes the function to make our widget(s) available
 add_action( 'init', 'wp_widget_adv_custom_field_register' );

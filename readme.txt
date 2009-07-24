@@ -2,14 +2,16 @@
 CONTRIBUTORS: athenaofdelphi, scottwallick
 TAGS: custom field, custom value, custom key, field, value, key, post meta, meta, get_post_meta, widget, sidebar, multiple widgets
 REQUIRES AT LEAST: 2.5
-TESTED UP TO: 2.7.1
-STABLE TAG: 0.5
+TESTED UP TO: 2.8.2
+STABLE TAG: 0.8
 
 The Advanced Custom Field Widget is an extension of the Custom Field Widget by Scott Wallick, and displays values of custom field keys.
 
 == Description ==
 
 The Advanced Custom Field Widget is an extension of the Custom Field Widget by Scott Wallick, and displays values of custom field keys, allowing post- and page-specific meta sidebar content.
+
+For detailed information about this plugin and how it works, check out it's wiki page at [Athena's Wiki](http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home).
 
 For more information about Scott's orginal Custom Field Widget, check out [plaintxt.org](http://www.plaintxt.org/experiments/custom-field-widget/).
 
@@ -26,75 +28,38 @@ Installing this plugin, is just like installing any other WordPress plugin.
 In other words, just upload the `/adv-custom-field-widget/` folder and its contents to your plugins folder.
 
 For more information about plugins and installing them, please review the [managing plugins](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins "Installing Plugins - WordPress Codex") section of the WordPress Codex.
- 
-== Advanced vs. Original ==
 
-The key differences relate to the control you have over the content.
+== Changelog ==
 
-The original plugin provided the option to grab a custom field and drop it in a widget like this:-
+= 0.8 =
+* Widget index field added to widget control panel. This field allows you to have multiple widgets on the page all linked to the same custom field via the '-linkto' function. For more information, read the user guide.
+* Extra additional data fields ($data2 to $data5) added for use in the content generator.
+* Page title variable ($pagetitle) added for use in the content generator. The variable is loaded with the title for the page whose data is being displayed by the widget.
+* Content generator was leaving slashes in the generated content.
 
-`BEFORE WIDGET EVENT
-   WIDGET TITLE
-   TEXT
-   CUSTOM FIELD
-AFTER WIDGET EVENT`
-	
-I started using it, to provide a nice side bar link to Amazon for items I had reviewed.   This raised some points:-
+= 0.7 =
+* Added additional data field $data1 and the required configuration field to the widget control panel.
 
-* I found a problem with multiple post pages.  The widget would display the custom field value from the first post on the page
-* I wanted to pick the selected custom field from random published posts
-* I wanted to be able to select from two different custom fields with only one being used as the 'random' source (allowing me to link on a review page, but then to ignore the item as though I didn't recommend it when picking randomly form the list of available items)
-* I wanted a portion of the widget to be fixed and permanently displayed
-  
-With all these points in mind, this is how the widget now operates.
+= 0.6 =
+* Added 'Content Generator' functionality.
 
-First up, it has 4 new sections added.  Fixed text 1 and 2, pretext and posttext:-
+= 0.5 =
+* Modified widget to reinitialise the $post variable to prevent it becoming 'corrupted' by other widgets which may have been rendered before the ACFW.
 
-`BEFORE WIDGET EVENT
-  WIDGET TITLE
-  FIXEDTEXT1 (If present)
-  ----- ONLY PRESENT IF CUSTOM FIELD VALUE IS PRESENT ---
-    TEXT (If present)
-    PRETEXT (If present)
-    CUSTOM FIELD 
-    POSTTEXT (If present)
-  -------------------------------------------------------
-  FIXEDTEXT2 (If present)	
-AFTER WIDGET EVENT`
+= 0.4 =
+* First version available via WordPress plugin directory.
+* Options are now only removed when the plugin is uninstalled (this is handled by 'uninstall.php').
+* Changed text domain for translation to 'acf_widget'.
 
-The content I wanted to inject was nearly perfectly formed, but I needed to wrap it in some additional formatting.  Clearly, I'm not going to want to drop the same formatting in for every single occurence of the custom field, so I added `PRETEXT` and `POSTTEXT` to allow you to add standard content before and after the actual field content.
+= 0.3 =
+* Added '<KEY>-linkto' processing allowing the content for a specific field to be provided by another page. This takes priority over the 'acfw-linkto' functionality.
 
-I also added:-
+= 0.2 =
+* Widget was only displaying content for posts (not pages). This was fixed in this version.
+* Added 'acfw-linkto' functionality to allow all widgets on a page to link to the same page.
 
-* `FIXEDTEXT1`
-* `FIXEDTEXT2`
-
-These two fields allow you to specify additional content in certain situations.  These fixed text items have four modes:-
-
-* A - Displayed always (Takes priority over the others)
-* M - Displayed only if there is some main content (if R is present, then R will take priority if content is randomised)
-* R - Displayed if there is some main content and it has been randomised	
-* N - Displayed if there is no main content
-	
-There are also two options, 'Randomise on single post pages' and 'Randomise on other pages'.  These allow you to have the widget pick random entries for the specified field from published articles, on pages (single and multiple post respectively) that don't have field entries of their own.  It should be noted that the random selections will come only from the primary key field (see below for more information).
-
-At least one section (`FIXEDTEXT1`, `FIXEDTEXT2` or `CUSTOM FIELD`) MUST be present for the widget to be displayed at all.
-
-You can also specify two key fields.  These obey the following rules:-
-
-* The primary will always be used if data for it is present
-* When displaying random content on pages that don't have linked fields, only content from the primary key field is used
-* The secondary will be used only for single post pages if there is no data present in the primary field
-
-*So what does this mean?*  Well, one of the reasons I modified Scott's original plugin was because I wanted to have specific items displayed on the pages they were reviewed on.  That was easy with the original.  And I then wanted to be able to randomly select a reviewed item for display on other pages.  That was also pretty easy, but then I got to thinking... what happens if I review something and I wouldn't recommend it in a million years.  I'd still want to link to it on the review page, but I wouldn't want to cycle it through other pages.  So, I added the secondary key field.  I have a key field called `amazon` and another called `amazon-notrecommended`.  If I want an item to cycle through I pop it in under the `amazon` field, if not, it goes in under the `amazon-notrecommended` field and then only ever gets seen on it's review page.
-
-Version 0.2 added the ability to draw content for the widget from another page.  To use this facility, simply add the custom field 'acfw-linkto' to a page and specify the page ID that contains the content you want to draw in.  When writing a section that will have common sidebar content coming from the widget, you can write once and use many.
-
-Version 0.3 added the ability to draw specific field content for the widget from another page.  To use this facility, simply add the custom field 'KEY-linkto' to a page (where KEY is the name of the custom field the widget is linked to).  So for example, lets say I want to draw content for the field 'amazon' from page 204, I would add the custom field 'amazon-linkto' and set it's value to 204.  This takes precedence over the general 'acfw-linkto' field.
-
-Version 0.4 has changed the deactivation code such that it doesn't delete your settings, instead, settings are now deleted when you uninstall the plugin.  The translation domain has also been changed to 'acf-widget' and a POT file has been produced.
-
-Version 0.5 has fixed an issue identified by James Collins.  When displayed under some widgets, ACFW failed to operate as expected.  The cause was modification of the $post variable.  I've added code to ACFW to reinitialise the loop query and the $post variable and it now operates correctly, linking to the page/post being displayed, not the last page/post accessed via the $post variable.
+= 0.1 =
+* Original version of Advanced Custom Field Widget.  This is a seriously butchered version of the original Custom Field Widget by Scott Wallick.
 
 == License ==
 
