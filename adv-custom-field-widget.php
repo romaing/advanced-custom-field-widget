@@ -5,13 +5,16 @@ PLUGIN URI: http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home
 DESCRIPTION: Displays the values of specified <a href="http://codex.wordpress.org/Using_Custom_Fields">custom field</a> keys, allowing post- and page-specific meta content in your sidebar. This plugin started life as a plaintxt.org experiment for WordPress by Scott Wallick, but I needed (or wanted) it to do more, so I've created this version which has more functionality than the original.  For some detailed instructions about it's use, check out my <a href="http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home">wiki</a>.  To report bugs or make feature requests, visit the Outer Reaches Studios <a href="http://mantis.outer-reaches.co.uk">issue tracker</a>, you will need to signup an account to report issues.
 AUTHOR: Christina Louise Warne
 AUTHOR URI: http://athena.outer-reaches.com/
-VERSION: 0.8
+VERSION: 0.81
 
 ------------------------------------------------------------------------------------------------------------
 Version History:-
 
 Version Date      Author                 Description
 ======= ========= ====================== ======================================
+0.81    31-Jul-09 Christina Louise Warne FIXED - When using widget index field, widgets that didn't have
+                                            data for their index were displaying the first item from the
+                                            list
 0.8     17-Jul-09 Christina Louise Warne ADDED - Widget index field.  This field allows you to have multiple
 											widgets on the page all linked to the same field (in that case,
 											only the widget with index 1 will display, even if the content
@@ -134,6 +137,9 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
 	$fixedtext1 = "";
 	$fixedtext2 = "";
 	$pagetitle = "";
+    
+    // Version 0.81
+    $srcpost=0;
 
 	// Version 0.5 Fix
  	// Reinitialise the main query and the $post variable
@@ -168,13 +174,14 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
 				} else {
 					$sourceindex = 0;
 				}
-				if ($sourceindex<0||$sourceindex>=count($temp)) {
-					$sourceindex=0;
+                
+                // Version 0.81 - Minor change to the logic to stop the widget
+                // pumping out stuff when the list is too short
+				if ($sourceindex>=0&&$sourceindex<count($temp)) {
+                    if (isset($temp[$sourceindex])) {
+                        $srcpost=$temp[$sourceindex];
+                    }
 				}	
-				
-				if (isset($temp[$sourceindex])) {
-					$srcpost=$temp[$sourceindex];
-				}
 		
 			} else {
 				
