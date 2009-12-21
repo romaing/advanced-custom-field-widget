@@ -8,7 +8,7 @@
 # the License, or (at your option) any later version.
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.81\n"
+"Project-Id-Version: 0.82\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/advanced-custom-field-widget\n"
 "POT-Creation-Date: 2009-07-24 22:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"

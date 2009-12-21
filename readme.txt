@@ -2,8 +2,8 @@
 CONTRIBUTORS: athenaofdelphi, scottwallick
 TAGS: custom field, custom value, custom key, field, value, key, post meta, meta, get_post_meta, widget, sidebar, multiple widgets
 REQUIRES AT LEAST: 2.5
-TESTED UP TO: 2.8.2
-STABLE TAG: 0.81
+TESTED UP TO: 2.9
+STABLE TAG: 0.82
 
 The Advanced Custom Field Widget is an extension of the Custom Field Widget by Scott Wallick, and displays values of custom field keys.
 
@@ -30,6 +30,9 @@ In other words, just upload the `/adv-custom-field-widget/` folder and its conte
 For more information about plugins and installing them, please review the [managing plugins](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins "Installing Plugins - WordPress Codex") section of the WordPress Codex.
 
 == Changelog ==
+
+= 0.82 =
+* Fixed problem when using widget with WordPress 2.9.  Some widgets were being displayed when they had no content.
 
 = 0.81 =
 * Fixed problem when using widget index functionality.  Widgets which didn't have a source page provided by the list were repeating the first item in the list.
