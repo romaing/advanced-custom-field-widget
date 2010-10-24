@@ -1,9 +1,9 @@
 === Advanced Custom Field Widget ===
-CONTRIBUTORS: AthenaOfDelphi, scottwallick
+CONTRIBUTORS: athenaofdelphi, scottwallick
 TAGS: custom field, custom value, custom key, field, value, key, post meta, meta, get_post_meta, widget, sidebar, multiple widgets
 REQUIRES AT LEAST: 2.5
 TESTED UP TO: 3.0.1
-STABLE TAG: 0.83
+STABLE TAG: 0.9
 
 The Advanced Custom Field Widget is an extension of the Custom Field Widget by Scott Wallick, and displays values of custom field keys.
 
@@ -30,6 +30,15 @@ In other words, just upload the `/adv-custom-field-widget/` folder and its conte
 For more information about plugins and installing them, please review the [managing plugins](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins "Installing Plugins - WordPress Codex") section of the WordPress Codex.
 
 == Changelog ==
+
+= 0.9 =
+* Added ability for widget to load all custom fields into variables $acfw_<FIELDNAME> for use in the content generator (main key field is still loaded in $acfw_content).
+* Removed previous version comments in an effort to tidy up the code base slightly.
+* Added ability to load values from multiple instances of specified fields.  The separator used can also be specified.
+* Revised control panel layout to try and make it clearer.  This has resulted in some major changes to the translation file.
+* Removed a deprecated function from the control panel, please check all configuration values after upgrading to this version to ensure that HTML entities etc. are properly stored.
+* Fixed an issue when using the widget within the main loop.  The page would continue on and on as the widget resets the main query resulting in the loop not being able to find the end of the page/post list.
+* Added ability to process content generator as PHP script which should populate the variable '$content'.
 
 = 0.83 =
 * Updated readme.txt to reflect support for WordPress version 3.0.1
@@ -72,7 +81,7 @@ For more information about plugins and installing them, please review the [manag
 
 == License ==
 
-Advanced Custom Field Widget, a plugin for WordPress, (C) 2008-09 by Christina Louise Warne (based on Custom Field Widget, a plugin for WordPress, (C) 2008 by Scott Allan Wallick, licensed under the [GNU General Public License](http://www.gnu.org/licenses/gpl.html "GNU General Public License")), is licensed under the [GNU General Public License](http://www.gnu.org/licenses/gpl.html "GNU General Public License").
+Advanced Custom Field Widget, a plugin for WordPress, (C) 2008-10 by Christina Louise Warne (based on Custom Field Widget, a plugin for WordPress, (C) 2008 by Scott Allan Wallick, licensed under the [GNU General Public License](http://www.gnu.org/licenses/gpl.html "GNU General Public License")), is licensed under the [GNU General Public License](http://www.gnu.org/licenses/gpl.html "GNU General Public License").
 
 Advanced Custom Field Widget is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
