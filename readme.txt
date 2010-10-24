@@ -3,7 +3,7 @@ CONTRIBUTORS: athenaofdelphi, scottwallick
 TAGS: custom field, custom value, custom key, field, value, key, post meta, meta, get_post_meta, widget, sidebar, multiple widgets
 REQUIRES AT LEAST: 2.5
 TESTED UP TO: 3.0.1
-STABLE TAG: 0.90
+STABLE TAG: 0.91
 
 The Advanced Custom Field Widget is an extension of the Custom Field Widget by Scott Wallick, and displays values of custom field keys.
 
@@ -31,7 +31,7 @@ For more information about plugins and installing them, please review the [manag
 
 == Changelog ==
 
-= 0.90 =
+= 0.91 =
 * Added ability for widget to load all custom fields into variables $acfw_<FIELDNAME> for use in the content generator (main key field is still loaded in $acfw_content).
 * Removed previous version comments in an effort to tidy up the code base slightly.
 * Added ability to load values from multiple instances of specified fields.  The separator used can also be specified.
