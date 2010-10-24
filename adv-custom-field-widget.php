@@ -5,14 +5,18 @@ PLUGIN URI: http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home
 DESCRIPTION: Displays the values of specified <a href="http://codex.wordpress.org/Using_Custom_Fields">custom field</a> keys, allowing post- and page-specific meta content in your sidebar. This plugin started life as a plaintxt.org experiment for WordPress by Scott Wallick, but I needed (or wanted) it to do more, so I've created this version which has more functionality than the original.  For some detailed instructions about it's use, check out my <a href="http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home">wiki</a>.  To report bugs or make feature requests, visit the Outer Reaches Studios <a href="http://mantis.outer-reaches.co.uk">issue tracker</a>, you will need to signup an account to report issues.
 AUTHOR: Christina Louise Warne
 AUTHOR URI: http://athena.outer-reaches.com/
-VERSION: 0.91
+VERSION: 0.92
 
 ------------------------------------------------------------------------------------------------------------
 Version History:-
 
 Version Date      Author                 Description
 ======= ========= ====================== ======================================
-0.91    09-Oct-10 Christina Louise Warne ADDED - Ability for widget to load all custom fields into variables
+0.92    24-Oct-10 Christina Louise Warne FIXED - Code to replace the widgets use of the main loop query was
+                                            faulty, and failed when trying to display the widget on pages
+                                            with more than one post.  This has been fixed in this version
+------- --------- ---------------------- --------------------------------------                                            
+0.91    24-Oct-10 Christina Louise Warne ADDED - Ability for widget to load all custom fields into variables
                                             $acfw_<FIELDNAME> for use in the content generator (main key
                                             field is still loaded in $acfw_content)
                                          EDIT - Removed previous version comments in an effort to
@@ -31,7 +35,7 @@ Version Date      Author                 Description
                                             list
                                          ADDED - Ability to process content generator as a script which
                                             should populate the variable '$content'
-------- --------- ---------------------- --------------------------------------                                            
+------- --------- ---------------------- --------------------------------------
 0.83    21-Aug-10 Christina Louise Warne EDIT - Updated version and WordPress version support information
 ------- --------- ---------------------- --------------------------------------
 0.82    21-Dec-09 Christina Louise Warne FIXED - Following upgrade to WordPress 2.9, ACFW was displaying
@@ -318,12 +322,13 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
     $originalqueryvars = $wp->query_vars;
     
     $wp->build_query_string();
-    $realpostlist = new WP_Query( $wp->query_vars );
+    $realpostlist = new WP_Query();
+    $realpostlist->query( $wp->query_vars );
     
     $wp->query_string = $originalquerystring;
     $wp->query_vars = $originalqueryvars;
     
-    if ( $realpostlist->post_count != 1 ) {
+    if ( $realpostlist->post_count == 0 ) {
         return;
     }
     
