@@ -31,7 +31,7 @@ For more information about plugins and installing them, please review the [manag
 
 == Changelog ==
 
-= 0.9 =
+= 0.90 =
 * Added ability for widget to load all custom fields into variables $acfw_<FIELDNAME> for use in the content generator (main key field is still loaded in $acfw_content).
 * Removed previous version comments in an effort to tidy up the code base slightly.
 * Added ability to load values from multiple instances of specified fields.  The separator used can also be specified.
