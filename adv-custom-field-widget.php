@@ -5,14 +5,14 @@ PLUGIN URI: http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home
 DESCRIPTION: Displays the values of specified <a href="http://codex.wordpress.org/Using_Custom_Fields">custom field</a> keys, allowing post- and page-specific meta content in your sidebar. This plugin started life as a plaintxt.org experiment for WordPress by Scott Wallick, but I needed (or wanted) it to do more, so I've created this version which has more functionality than the original.  For some detailed instructions about it's use, check out my <a href="http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home">wiki</a>.  To report bugs or make feature requests, visit the Outer Reaches Studios <a href="http://mantis.outer-reaches.co.uk">issue tracker</a>, you will need to signup an account to report issues.
 AUTHOR: Christina Louise Warne
 AUTHOR URI: http://athena.outer-reaches.com/
-VERSION: 0.9
+VERSION: 0.90
 
 ------------------------------------------------------------------------------------------------------------
 Version History:-
 
 Version Date      Author                 Description
 ======= ========= ====================== ======================================
-0.9     09-Oct-10 Christina Louise Warne ADDED - Ability for widget to load all custom fields into variables
+0.90    09-Oct-10 Christina Louise Warne ADDED - Ability for widget to load all custom fields into variables
                                             $acfw_<FIELDNAME> for use in the content generator (main key
                                             field is still loaded in $acfw_content)
                                          EDIT - Removed previous version comments in an effort to
