@@ -9,9 +9,9 @@
 
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.92\n"
+"Project-Id-Version: 0.93\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/advanced-custom-field-widget\n"
-"POT-Creation-Date: 2010-10-24 14:40+0000\n"
+"POT-Creation-Date: 2010-11-07 00:55+0000\n"
 "PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
 "Last-Translator: CHRISTINA LOUISE WARNE <athena@outer-reaches.com>\n"
 "Language-Team: CHRISTINA LOUISE WARNE <athena@outer-reaches.com>\n"
@@ -19,15 +19,23 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: adv-custom-field-widget.php:202 adv-custom-field-widget.php:917
+#: adv-custom-field-widget.php:276 adv-custom-field-widget.php:1009
 msgid "All items"
 msgstr ""
 
-#: adv-custom-field-widget.php:204 adv-custom-field-widget.php:919
+#: adv-custom-field-widget.php:278 adv-custom-field-widget.php:1011
 msgid "Separator"
 msgstr ""
 
-#: adv-custom-field-widget.php:823
+#: adv-custom-field-widget.php:912
+msgid "ACFW instance ID (use this with shortcode and theme function):"
+msgstr ""
+
+#: adv-custom-field-widget.php:912
+msgid "(Unknown - Save the configuration)"
+msgstr ""
+
+#: adv-custom-field-widget.php:915
 #, php-format
 msgid ""
 "Enter the custom field key <a href=\"%s\">[?]</a>  to locate in single posts/"
@@ -35,69 +43,69 @@ msgid ""
 "title and text (if provided)."
 msgstr ""
 
-#: adv-custom-field-widget.php:826
+#: adv-custom-field-widget.php:918
 msgid "Primary Custom Field Key (required - Used for randomised content):"
 msgstr ""
 
-#: adv-custom-field-widget.php:827 adv-custom-field-widget.php:831
+#: adv-custom-field-widget.php:919 adv-custom-field-widget.php:923
 msgid "The <strong>key</strong> must match <em>exactly</em> as in posts/pages."
 msgstr ""
 
-#: adv-custom-field-widget.php:830
+#: adv-custom-field-widget.php:922
 msgid ""
 "Secondary Custom Field Key (optional - Used if no content for primary on "
 "single post pages):"
 msgstr ""
 
-#: adv-custom-field-widget.php:836
+#: adv-custom-field-widget.php:928
 msgid "Widget Title:"
 msgstr ""
 
-#: adv-custom-field-widget.php:842
+#: adv-custom-field-widget.php:934
 msgid "Widget Text:"
 msgstr ""
 
-#: adv-custom-field-widget.php:849
+#: adv-custom-field-widget.php:941
 msgid "Widget Pretext:"
 msgstr ""
 
-#: adv-custom-field-widget.php:854
+#: adv-custom-field-widget.php:946
 msgid "Widget Posttext:"
 msgstr ""
 
-#: adv-custom-field-widget.php:860
+#: adv-custom-field-widget.php:952
 msgid "Fixed Text 1 Always:"
 msgstr ""
 
-#: adv-custom-field-widget.php:865
+#: adv-custom-field-widget.php:957
 msgid "Fixed Text 1 Content Found:"
 msgstr ""
 
-#: adv-custom-field-widget.php:871
+#: adv-custom-field-widget.php:963
 msgid "Fixed Text 1 No Content:"
 msgstr ""
 
-#: adv-custom-field-widget.php:876
+#: adv-custom-field-widget.php:968
 msgid "Fixed Text 1 Random Content:"
 msgstr ""
 
-#: adv-custom-field-widget.php:882
+#: adv-custom-field-widget.php:974
 msgid "Fixed Text 2 Always:"
 msgstr ""
 
-#: adv-custom-field-widget.php:887
+#: adv-custom-field-widget.php:979
 msgid "Fixed Text 2 Content Found:"
 msgstr ""
 
-#: adv-custom-field-widget.php:893
+#: adv-custom-field-widget.php:985
 msgid "Fixed Text 2 No Content:"
 msgstr ""
 
-#: adv-custom-field-widget.php:898
+#: adv-custom-field-widget.php:990
 msgid "Fixed Text 2 Random Content:"
 msgstr ""
 
-#: adv-custom-field-widget.php:907
+#: adv-custom-field-widget.php:999
 msgid ""
 "When displaying the content of a custom field, the widget evals an string "
 "building command that builds main content.  If the Content Generator field "
@@ -112,65 +120,69 @@ msgid ""
 "source for the rest of the widget content."
 msgstr ""
 
-#: adv-custom-field-widget.php:910
+#: adv-custom-field-widget.php:1002
 msgid ""
 "Additional data fields are optional.  They are used to specify custom "
 "fields, the values of which will be loaded into the variables $data1-$data5 "
 "which can be used in the content generator."
 msgstr ""
 
-#: adv-custom-field-widget.php:911
+#: adv-custom-field-widget.php:1003
 msgid ""
 "Select <i>Load all custom fields</i> or specify the custom fields you wish "
 "to load.  When selecting <i>Load all custom fields</i>, the data is loaded "
 "into the array <i>$custom</i>"
 msgstr ""
 
-#: adv-custom-field-widget.php:915
+#: adv-custom-field-widget.php:1007
 msgid "Load all custom fields:"
 msgstr ""
 
-#: adv-custom-field-widget.php:923
+#: adv-custom-field-widget.php:1015
 msgid "Additional Data Field 1:"
 msgstr ""
 
-#: adv-custom-field-widget.php:926
+#: adv-custom-field-widget.php:1018
 msgid "Additional Data Field 2:"
 msgstr ""
 
-#: adv-custom-field-widget.php:929
+#: adv-custom-field-widget.php:1021
 msgid "Additional Data Field 3:"
 msgstr ""
 
-#: adv-custom-field-widget.php:932
+#: adv-custom-field-widget.php:1024
 msgid "Additional Data Field 4:"
 msgstr ""
 
-#: adv-custom-field-widget.php:935
+#: adv-custom-field-widget.php:1027
 msgid "Additional Data Field 5:"
 msgstr ""
 
-#: adv-custom-field-widget.php:939
+#: adv-custom-field-widget.php:1031
 msgid "Content Generator:"
 msgstr ""
 
-#: adv-custom-field-widget.php:943
+#: adv-custom-field-widget.php:1035
 msgid "Process content generator as script:"
 msgstr ""
 
-#: adv-custom-field-widget.php:950
+#: adv-custom-field-widget.php:1039
+msgid "Do not run content generator through 'convert_chars' filter:"
+msgstr ""
+
+#: adv-custom-field-widget.php:1046
 msgid "Show random on single post pages:"
 msgstr ""
 
-#: adv-custom-field-widget.php:954
+#: adv-custom-field-widget.php:1050
 msgid "Show random on other pages:"
 msgstr ""
 
-#: adv-custom-field-widget.php:959
+#: adv-custom-field-widget.php:1055
 msgid "Do not filter content:"
 msgstr ""
 
-#: adv-custom-field-widget.php:962
+#: adv-custom-field-widget.php:1058
 msgid ""
 "Filtering beautifies some of the HTML output by the widget.  For example if "
 "you have picture dimensions WWWxHHH, the x will be converted to a nicer "
@@ -178,11 +190,11 @@ msgid ""
 "occuring, check this box, it will turn off filtering."
 msgstr ""
 
-#: adv-custom-field-widget.php:964
+#: adv-custom-field-widget.php:1060
 msgid "Widget index:"
 msgstr ""
 
-#: adv-custom-field-widget.php:971
+#: adv-custom-field-widget.php:1067
 #, php-format
 msgid ""
 "For assistance with ACFW, post your comments on <a href=\"%1$s\" target="
@@ -190,10 +202,10 @@ msgid ""
 "2$s\" target=\"_BLANK\">my wiki</a>.  <i>Thanks, AthenaOfDelphi</i>"
 msgstr ""
 
-#: adv-custom-field-widget.php:992
+#: adv-custom-field-widget.php:1115
 msgid "Display page/post custom field value for a set key"
 msgstr ""
 
-#: adv-custom-field-widget.php:1001
+#: adv-custom-field-widget.php:1124
 msgid "Adv. Custom Field"
 msgstr ""
