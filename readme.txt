@@ -3,7 +3,8 @@ CONTRIBUTORS: athenaofdelphi, scottwallick
 TAGS: custom field, custom value, custom key, field, value, key, post meta, meta, get_post_meta, widget, sidebar, multiple widgets
 REQUIRES AT LEAST: 2.5
 TESTED UP TO: 3.0.1
-STABLE TAG: 0.92
+STABLE TAG: 0.93
+DONATE LINK: http://athena.outer-reaches.com/wiki/doku.php?id=donate
 
 The Advanced Custom Field Widget is an extension of the Custom Field Widget by Scott Wallick, and displays values of custom field keys.
 
@@ -30,6 +31,14 @@ In other words, just upload the `/adv-custom-field-widget/` folder and its conte
 For more information about plugins and installing them, please review the [managing plugins](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins "Installing Plugins - WordPress Codex") section of the WordPress Codex.
 
 == Changelog ==
+
+= 0.93 =
+* Added an option to stop the field filters putting the content generator through the 'convert_chars' filter.  When running with different locales, this appears to be converting some chars to entities (& to &#38;) with the consequence that links were being broken
+* Added a shortcode for ACFW.  Add [acfw id="<INSTANCEID>"] to a post and the widget will be rendered in the post
+* Added a function for ACFW. Add acfw(id) to a theme and the widget will render directly in the theme
+* Added a custom siderbar to hold widgets for use by ACFW shortcode and function
+* Added a widget instance ID display to the configuration panel (this provides the widget instance ID's for use with the shortcode and theme rendering function)
+* Added enhanced separator functionality allowing users to specify a different separator for the last item and a list terminator
 
 = 0.92 =
 * Fix to an error in the main loop query replacement code that was preventing the widget from displaying on pages with multiple posts

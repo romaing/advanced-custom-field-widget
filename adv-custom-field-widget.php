@@ -5,13 +5,32 @@ PLUGIN URI: http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home
 DESCRIPTION: Displays the values of specified <a href="http://codex.wordpress.org/Using_Custom_Fields">custom field</a> keys, allowing post- and page-specific meta content in your sidebar. This plugin started life as a plaintxt.org experiment for WordPress by Scott Wallick, but I needed (or wanted) it to do more, so I've created this version which has more functionality than the original.  For some detailed instructions about it's use, check out my <a href="http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home">wiki</a>.  To report bugs or make feature requests, visit the Outer Reaches Studios <a href="http://mantis.outer-reaches.co.uk">issue tracker</a>, you will need to signup an account to report issues.
 AUTHOR: Christina Louise Warne
 AUTHOR URI: http://athena.outer-reaches.com/
-VERSION: 0.92
+VERSION: 0.93
 
 ------------------------------------------------------------------------------------------------------------
 Version History:-
 
 Version Date      Author                 Description
 ======= ========= ====================== ======================================
+0.93    06-Nov-10 Christina Louise Warne FIXED - Added an option to stop the field filters putting the content
+                                            generator through the 'convert_chars' filter.  When running
+                                            with different locales, this appears to be converting some chars
+                                            to entities (& to &#38;) with the consequence that links were
+                                            being broken
+                                         ADDED - ACFW shortcode.  The widget config panel provides the widget
+                                            instance ID.  Add [acfw id="<INSTANCEID>"] to a post and the 
+                                            widget will be rendered in the post
+                                         ADDED - acfw(id) function.  You can now render widgets directly in
+                                            a theme.  Simply add acfw(<INSTANCEID>); to the theme to render
+                                            the widget directly in the theme
+                                         ADDED - Custom sidebar to hold widgets for use by ACFW shortcode and
+                                            function
+                                         ADDED - Widget instance ID display to configuration panel (for use
+                                            with ACFW shortcode and function)
+                                         ADDED - Enhanced separator functionality allowing user to specify
+                                            a different separator for the last item and an ending marker
+                                            if required (refer to the usermanual for more information)
+------- --------- ---------------------- --------------------------------------                                            
 0.92    24-Oct-10 Christina Louise Warne FIXED - Code to replace the widgets use of the main loop query was
                                             faulty, and failed when trying to display the widget on pages
                                             with more than one post.  This has been fixed in this version
@@ -124,6 +143,73 @@ define( 'ACFWBLOGLINK', 'http://athena.outer-reaches.com/wp/index.php/wiki/advan
 define( 'ACFWWIKILINK', 'http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home' );
 define( 'CODEXCUSTOMFIELDLINK', 'http://codex.wordpress.org/Using_Custom_Fields' );
 
+// Load a list of values for a field
+function acfw_loadlist( $values, $acfwsep ) {
+    $itemsep = "";
+    $lastitemsep = "";
+    $ending = "";
+    
+    // Capture the inter-item separator
+    $idx = strpos( $acfwsep, '|' );
+    if ( ! ( $idx === false ) ) {
+        if ( $idx > 0 ) {
+            $itemsep = substr( $acfwsep, 0, $idx );    
+        }
+        
+        $acfwsep = substr( $acfwsep, $idx + 1, strlen( $acfwsep ) );
+    } else {
+        if ( $acfwsep != "" ) {
+            $itemsep = $acfwsep;
+            $acfwsep = "";
+        }
+    }
+    
+    // Capture the last inter-item separator
+    $idx = strpos( $acfwsep, '|' );
+    if ( ! ( $idx === false ) ) {
+        if ( $idx > 0 ) {
+            $lastitemsep = substr ( $acfwsep, 0, $idx );            
+        } else {
+            $lastitemsep = $itemsep;
+        }
+        
+        $acfwsep = substr( $acfwsep, $idx + 1, strlen( $acfwsep ) );
+        
+        // Capture the ending
+        if ( $acfwsep != "" ) {
+            $ending = $acfwsep;
+        }
+    } else {
+        if ( $acfwsep != "" ) {
+            $lastitemsep = $acfwsep;
+        } else {
+            $lastitemsep = $itemsep;
+        }
+    }
+
+    $itemsleft = count( $values );
+    $temp = "";
+    
+    foreach ( $values as $key => $value ) {
+        if ( $temp != '' ) {
+            if ( $itemsleft > 1 ) {
+                $temp .= $itemsep;
+            } else {
+                $temp .= $lastitemsep;
+            }
+        }
+                
+        $temp .= $value;
+        $itemsleft = $itemsleft - 1;
+    }
+    
+    if ( ( $temp != "" ) && ( $ending != "" ) ) {
+        $temp .= $ending;
+    }
+    
+    return $temp;
+}
+
 // Load a single custom field for the specified post from the system
 function acfw_loadsinglefield( $acfwpostid, $acfwkey, $acfwloadall, $acfwsep, &$acfwfield)
 {   
@@ -134,13 +220,7 @@ function acfw_loadsinglefield( $acfwpostid, $acfwkey, $acfwloadall, $acfwsep, &$
         
         if ( ! empty( $values ) ) {
             if ( $acfwloadall ) {
-                foreach ( $values as $key => $value ) {
-                    if ( $temp != '' ) {
-                        $temp .= $acfwsep;
-                    }
-                
-                    $temp .= $value;
-                }
+                $temp = acfw_loadlist( $values, $acfwsep );
             } else {
                 $temp = $values[0];
             }
@@ -159,17 +239,7 @@ function acfw_loadallfields( $acfwpostid, $acfwloadall, $acfwsep, &$container )
         foreach ( $temp as $key => $value ) {
             if ( is_array($value) ) {
                 if ( $acfwloadall ) {
-                    $itemlist = '';
-                    foreach ( $value as $idx => $item ) {
-                        if ( $itemlist != '' ) {
-                            $itemlist .= $acfwsep;
-                        }
-                        
-                        $itemlist .= $item;
-                    }
-                     
-                    $container[ $key ] = $itemlist;   
-                    
+                    $container[ $key ] = acfw_loadlist( $values, $acfwsep );
                 } else {
                     $container[ $key ] = $value;
                 }
@@ -211,11 +281,19 @@ function acfw_editfield( $number, $mainlabel, $keyid, $datakey, $datakeyloadall,
 }
 
 // Run the provided data through the required filters
-function acfw_filterfield( $dontfilter, &$data)
+function acfw_filterfield( $dontfilter, $dontconvert, &$data)
 {
-    $data = apply_filters( 'adv_custom_field_value', $data );
+    if ( !$dontconvert ) {
+        // Convert chars
+        $data = apply_filters( 'adv_custom_field_value1', $data );
+    }
+    
+    // Strip slashes
+    $data = apply_filters( 'adv_custom_field_value2', $data );
+    
     if ( !$dontfilter ) {
-        $data = apply_filters( 'adv_custom_field_value2', $data );
+        // WP Texturize
+        $data = apply_filters( 'adv_custom_field_value3', $data );
     }
     $data = addslashes( $data );
     
@@ -235,7 +313,7 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
 	// Our widgets are stored with a numeric ID, process them as such
 	if ( is_numeric($widget_args) )
 		$widget_args = array( 'number' => $widget_args );
-        
+    
 	// We'll need to get our widget data by offsetting for the default widget
 	$widget_args = wp_parse_args( $widget_args, array( 'number' => -1 ) );
     
@@ -432,6 +510,9 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
 	
 	// Load the 'don't filter' configuration flag
 	$dontfilter = ! empty( $options[$number]['dontfilter'] );
+    
+    // Load the 'don't convert' configuration flag
+    $dontconvert = ! empty( $options[$number]['dontconvert'] );
 		
 	// If we are loading random content
 	if ( $dorandom && ! $blocked ) {
@@ -521,8 +602,8 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
             $acfw_content = $cvalue;
             $cvalue = $contentgen;
 
-            acfw_filterfield( $dontfilter, $acfw_content);
-			acfw_filterfield( false, $pagetitle);
+            acfw_filterfield( $dontfilter, false, $acfw_content);
+			acfw_filterfield( false, false, $pagetitle);
             
             if ( $loadallcustom ) {
                 if ( count( $custom ) > 0 ) {
@@ -536,11 +617,11 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
                 
                 unset( $custom );
             } else {
-                acfw_filterfield( $dontfilter, $data1 );
-                acfw_filterfield( $dontfilter, $data2 );
-                acfw_filterfield( $dontfilter, $data3 );
-                acfw_filterfield( $dontfilter, $data4 );
-                acfw_filterfield( $dontfilter, $data5 );
+                acfw_filterfield( $dontfilter, false, $data1 );
+                acfw_filterfield( $dontfilter, false, $data2 );
+                acfw_filterfield( $dontfilter, false, $data3 );
+                acfw_filterfield( $dontfilter, false, $data4 );
+                acfw_filterfield( $dontfilter, false, $data5 );
             }
             
             $pageurl = addslashes( $pageurl );
@@ -551,7 +632,7 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
         if ( $contentgenscript ) {
             $cvalue=str_replace('\n',chr(13).chr(10),$cvalue);
         } else {
-            acfw_filterfield( $dontfilter, $cvalue );
+            acfw_filterfield( $dontfilter, $dontconvert, $cvalue );
         }
 	
 		// Yes? Then let's make a widget. Open it.
@@ -583,7 +664,7 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
                 eval( $cvalue );
                 $cvalue=$content;
             }
-            
+			
 			eval( '$cvalue="\n<div class=\"advcustomvalue\">\n' . $cvalue . '\n</div>\n";' );
             
 			echo urldecode( stripslashes( $cvalue ) );
@@ -660,6 +741,7 @@ function wp_widget_adv_custom_field_control( $widget_args ) {
             $dorandomsingle       = strip_tags( stripslashes( $widget_adv_custom_field['dorandomsingle'] ) );
             $dorandomother        = strip_tags( stripslashes( $widget_adv_custom_field['dorandomother'] ) );   
             $dontfilter           = strip_tags( stripslashes( $widget_adv_custom_field['dontfilter'] ) );
+            $dontconvert          = strip_tags( stripslashes( $widget_adv_custom_field['dontconvert'] ) );
             $widgetindex          = strip_tags( stripslashes( $widget_adv_custom_field['widgetindex'] ) );
             $data1key             = strip_tags( stripslashes( $widget_adv_custom_field['data1key'] ) );
             $data2key             = strip_tags( stripslashes( $widget_adv_custom_field['data2key'] ) );
@@ -732,7 +814,8 @@ function wp_widget_adv_custom_field_control( $widget_args ) {
                 'skeyloadall', 'skeysep', 'data1keyloadall', 'data1keysep',
                 'data2keyloadall', 'data2keysep', 'data3keyloadall', 'data3keysep',
                 'data4keyloadall','data4keysep', 'data5keyloadall', 'data5keysep',
-                'loadallcustomloadall', 'loadallcustomsep', 'contentgenscript'
+                'loadallcustomloadall', 'loadallcustomsep', 'contentgenscript',
+                'dontconvert'
 				);
 		}
 		// Update our options in the database
@@ -766,6 +849,7 @@ function wp_widget_adv_custom_field_control( $widget_args ) {
 		$dorandomother        = '';
 		$contentgen           = '';
 		$dontfilter		      = '';
+        $dontconvert          = '';
 		$widgetindex          = '';
         $data1key             = '';
         $data1keyloadall      = false;
@@ -805,6 +889,8 @@ function wp_widget_adv_custom_field_control( $widget_args ) {
 		$dorandomother        = ! empty( $options[$number]['dorandomother'] );
 		$contentgen           = esc_attr( $options[$number]['contentgen'] );
         $dontfilter           = ! empty( $options[$number]['dontfilter'] );
+        $dontconvert          = ! empty( $options[$number]['dontconvert'] );
+        
         $widgetindex          = esc_attr( $options[$number]['widgetindex'] );
         $loadallcustom        = ! empty( $options[$number]['loadallcustom'] );
         $loadallcustomloadall = ! empty( $options[$number]['loadallcustomloadall'] );
@@ -823,6 +909,7 @@ function wp_widget_adv_custom_field_control( $widget_args ) {
 	// Generate the widget control panel
 ?>
     <div style="width:700px">
+    <p><?php _e( 'ACFW instance ID (use this with shortcode and theme function):', 'acf_widget' ); ?> <b></i><?php if (is_numeric( $number )) { echo $number; } else { _e( '(Unknown - Save the configuration)', 'acf_widget' ); } ?></b></i></p>
     <h3>Key Data Source</h3>
 	<p>
         <?php printf( __( 'Enter the custom field key <a href="%s">[?]</a>  to locate in single posts/pages. When found, the corresponding value is displayed along with widget title and text (if provided).', 'acf_widget' ), CODECUSTOMFIELDLINK ) ?>
@@ -948,6 +1035,10 @@ function wp_widget_adv_custom_field_control( $widget_args ) {
         <label for="adv-custom-field-contentgenscript-<?php echo $number; ?>"><?php _e( 'Process content generator as script:', 'acf_widget' ) ?></label>
         <input type="checkbox" id="adv-custom-field-contentgenscript-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][contentgenscript]" <?php if ( $contentgenscript ) echo "checked"; ?>>
     </p>
+    <p>
+        <label for="adv-custom-field-dontconvert-<?php echo $number; ?>"><?php _e( 'Do not run content generator through \'convert_chars\' filter:', 'acf_widget' ) ?></label>
+        <input type="checkbox" id="adv-custom-field-dontconvert-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][dontconvert]" <?php if ( $dontconvert ) echo "checked"; ?>>
+    </p>
     
     <hr />
     <h3>Miscellaneous</h3>		
@@ -960,10 +1051,10 @@ function wp_widget_adv_custom_field_control( $widget_args ) {
 		<input type="checkbox" id="adv-custom-field-dorandomother-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][dorandomother]" <?php if ( $dorandomother ) echo "checked"; ?>>
 		<input type="hidden" name="widget-adv-custom-field[<?php echo $number; ?>][submit]" value="1" />
 	</p>	
-	<p>
-		<label for="adv-custom-field-dontfilter-<?php echo $number; ?>"><?php _e( 'Do not filter content:', 'acf_widget' ) ?></label>
-		<input type="checkbox" id="adv-custom-field-dontfilter-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][dontfilter]" <?php if ( $dontfilter ) echo "checked"; ?>>
-	</p>
+    <p>
+        <label for="adv-custom-field-dontfilter-<?php echo $number; ?>"><?php _e( 'Do not filter content:', 'acf_widget' ) ?></label>
+        <input type="checkbox" id="adv-custom-field-dontfilter-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][dontfilter]" <?php if ( $dontfilter ) echo "checked"; ?>>
+    </p>
 	<p><?php _e( 'Filtering beautifies some of the HTML output by the widget.  For example if you have picture dimensions WWWxHHH, the x will be converted to a nicer looking character.  This can result in the failure of links etc.  If this is occuring, check this box, it will turn off filtering.', 'acf_widget' ) ?></p>
 	<p>
 		<label for="adv-custom-field-widgetindex-<?php echo $number; ?>"><?php _e( 'Widget index:', 'acf_widget' ) ?></label>
@@ -981,6 +1072,33 @@ function wp_widget_adv_custom_field_control( $widget_args ) {
 <?php
 	// And we're finished with our widget options panel
 }
+
+// Shortcode to allow rendering of widgets in a post
+function acfw_getwidget( $atts ) {
+    $content = '';
+    
+    extract( shortcode_atts( array(
+        'id' => '0'
+    ), $atts ) );
+
+    $acfwid = $atts['id'];
+    
+    if ( $acfwid != 0 ) {
+        ob_start();
+        wp_widget_adv_custom_field( array( 'number' => $acfwid ), 1 );
+        $content = ob_get_contents();
+        ob_end_clean();
+    }
+    
+    return $content;
+}
+add_shortcode( 'acfw', 'acfw_getwidget' );
+
+// Function to allow rendering of widgets directly in a theme
+function acfw( $number ) {
+    wp_widget_adv_custom_field( array( 'number' => $number ), 1 );
+}
+
 // Function to add widget option table when activating this plugin
 function wp_widget_adv_custom_field_activation() {
 	add_option( 'widget_adv_custom_field', '', '', 'yes' );
@@ -1024,12 +1142,22 @@ function wp_widget_adv_custom_field_register() {
 		wp_register_sidebar_widget( 'adv-custom-field-1', $name, 'wp_widget_adv_custom_field', $widget_ops, array( 'number' => -1 ) );
 		wp_register_widget_control( 'adv-custom-field-1', $name, 'wp_widget_adv_custom_field_control', $control_ops, array( 'number' => -1 ) );
 	}
+    
+    // Register our holding sidebar
+    register_sidebar( array(
+        'id'            => 'acfw01',
+        'name'          => 'ACFW Holding Area',
+        'description'   => 'Holding area for invisible instances of ACFW that can be added using the [acfw id="<acfwid>"] shortcode or the acfw(<acfwid>); function in themes.',
+        'before_widget' => '',
+        'after_widget'  => ''
+        )
+    );
 }
 
 // Adds filters to custom field values to prettify like other content
-add_filter( 'adv_custom_field_value', 'convert_chars' );
-add_filter( 'adv_custom_field_value', 'stripslashes' );
-add_filter( 'adv_custom_field_value2', 'wptexturize' );
+add_filter( 'adv_custom_field_value1', 'convert_chars' );
+add_filter( 'adv_custom_field_value2', 'stripslashes' );
+add_filter( 'adv_custom_field_value3', 'wptexturize' );
 
 // When activating, run the appropriate function
 register_activation_hook( __FILE__, 'wp_widget_adv_custom_field_activation' );
