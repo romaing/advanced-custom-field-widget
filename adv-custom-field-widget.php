@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /*
 PLUGIN NAME: Advanced Custom Field Widget
 PLUGIN URI: http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home
@@ -141,6 +141,7 @@ If not, see www.gnu.org/licenses/
 
 define( 'ACFWBLOGLINK', 'http://athena.outer-reaches.com/wp/index.php/wiki/advanced-custom-field-widget' );
 define( 'ACFWWIKILINK', 'http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home' );
+define( 'ACFWTEXTDOMAIN', 'adv-custom-field-widget' );
 define( 'CODEXCUSTOMFIELDLINK', 'http://codex.wordpress.org/Using_Custom_Fields' );
 
 // Load a list of values for a field
@@ -273,9 +274,9 @@ function acfw_editfield( $number, $mainlabel, $keyid, $datakey, $datakeyloadall,
 ?>
         <label for="adv-custom-field-<?php echo $keyid; ?>key-<?php echo $number; ?>"><?php echo $mainlabel; ?></label><br />
         <input id="adv-custom-field-<?php echo $keyid; ?>key-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][<?php echo $keyid; ?>key]" class="code" size="25" type="text" value="<?php echo $datakey; ?>" />
-        <label for="adv-custom-field-<?php echo $keyid; ?>keyloadall-<?php echo $number; ?>"><?php _e('All items','acf_widget') ?></label>
-        <input type="checkbox" id="adv-custom-field-<?php echo $keyid; ?>keyloadall-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][<?php echo $keyid; ?>keyloadall]" <?php if ($datakeyloadall) echo "checked"; ?> />
-        <label for="adv-custom-field-<?php echo $keyid; ?>keyseparator-<?php echo $number; ?>"><?php _e('Separator','acf_widget') ?></label>
+        <label for="adv-custom-field-<?php echo $keyid; ?>keyloadall-<?php echo $number; ?>"><?php _e( 'All items', ACFWTEXTDOMAIN ) ?></label>
+        <input type="checkbox" id="adv-custom-field-<?php echo $keyid; ?>keyloadall-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][<?php echo $keyid; ?>keyloadall]" <?php if ( $datakeyloadall ) echo "checked"; ?> />
+        <label for="adv-custom-field-<?php echo $keyid; ?>keyseparator-<?php echo $number; ?>"><?php _e( 'Separator', ACFWTEXTDOMAIN ) ?></label>
         <input id="adv-custom-field-<?php echo $keyid; ?>keyseparator-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][<?php echo $keyid; ?>keyseparator]" class="code" size="25" type="text" value="<?php echo $datakeysep; ?>" />
 <?php
 }
@@ -909,85 +910,85 @@ function wp_widget_adv_custom_field_control( $widget_args ) {
 	// Generate the widget control panel
 ?>
     <div style="width:700px">
-    <p><?php _e( 'ACFW instance ID (use this with shortcode and theme function):', 'acf_widget' ); ?> <b></i><?php if (is_numeric( $number )) { echo $number; } else { _e( '(Unknown - Save the configuration)', 'acf_widget' ); } ?></b></i></p>
+    <p><?php _e( 'ACFW instance ID (use this with shortcode and theme function):', ACFWTEXTDOMAIN ); ?> <b></i><?php if (is_numeric( $number )) { echo $number; } else { _e( '(Unknown - Save the configuration)', ACFWTEXTDOMAIN ); } ?></b></i></p>
     <h3>Key Data Source</h3>
 	<p>
-        <?php printf( __( 'Enter the custom field key <a href="%s">[?]</a>  to locate in single posts/pages. When found, the corresponding value is displayed along with widget title and text (if provided).', 'acf_widget' ), CODECUSTOMFIELDLINK ) ?>
+        <?php printf( __( 'Enter the custom field key <a href="%s">[?]</a>  to locate in single posts/pages. When found, the corresponding value is displayed along with widget title and text (if provided).', ACFWTEXTDOMAIN ), CODECUSTOMFIELDLINK ) ?>
     </p>
 	<p>
-        <?php acfw_editfield( $number, __( 'Primary Custom Field Key (required - Used for randomised content):', 'acf_widget' ), '', $key, $keyloadall, $keysep ); ?><br />
-		<?php _e( 'The <strong>key</strong> must match <em>exactly</em> as in posts/pages.', 'acf_widget' ) ?>
+        <?php acfw_editfield( $number, __( 'Primary Custom Field Key (required - Used for randomised content):', ACFWTEXTDOMAIN ), '', $key, $keyloadall, $keysep ); ?><br />
+		<?php _e( 'The <strong>key</strong> must match <em>exactly</em> as in posts/pages.', ACFWTEXTDOMAIN ) ?>
 	</p>
 	<p>
-        <?php acfw_editfield( $number, __( 'Secondary Custom Field Key (optional - Used if no content for primary on single post pages):', 'acf_widget' ), 's', $skey, $skeyloadall, $skeysep ); ?><br />
-		<?php _e( 'The <strong>key</strong> must match <em>exactly</em> as in posts/pages.', 'acf_widget' ) ?>
+        <?php acfw_editfield( $number, __( 'Secondary Custom Field Key (optional - Used if no content for primary on single post pages):', ACFWTEXTDOMAIN ), 's', $skey, $skeyloadall, $skeysep ); ?><br />
+		<?php _e( 'The <strong>key</strong> must match <em>exactly</em> as in posts/pages.', ACFWTEXTDOMAIN ) ?>
 	</p>
     <hr />
     <h3>Widget Title (Optional)</h3>
 	<p>
-		<label for="adv-custom-field-title-<?php echo $number; ?>"><?php _e( 'Widget Title:', 'acf_widget' ) ?></label>
+		<label for="adv-custom-field-title-<?php echo $number; ?>"><?php _e( 'Widget Title:', ACFWTEXTDOMAIN ) ?></label>
 		<input id="adv-custom-field-title-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][title]" class="widefat" type="text" value="<?php echo $title; ?>" />
 	</p>
     <hr />
     <h3>Content Wrapping (Optional)</h3>
 	<p>
-		<label for="adv-custom-field-text-<?php echo $number; ?>"><?php _e( 'Widget Text:', 'acf_widget' ) ?></label>
+		<label for="adv-custom-field-text-<?php echo $number; ?>"><?php _e( 'Widget Text:', ACFWTEXTDOMAIN ) ?></label>
 		<textarea id="adv-custom-field-text-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][text]" class="code widefat" rows="5" cols="20"><?php echo $text; ?></textarea>
 	</p>
 	
 	<table border="0" align="center">
 	<tr><td>
 	<p>
-		<label for="adv-custom-field-pretext-<?php echo $number; ?>"><?php _e( 'Widget Pretext:', 'acf_widget' ) ?></label>
+		<label for="adv-custom-field-pretext-<?php echo $number; ?>"><?php _e( 'Widget Pretext:', ACFWTEXTDOMAIN ) ?></label>
 		<textarea id="adv-custom-field-pretext-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][pretext]" class="code widefat" rows="5" cols="20"><?php echo $pretext; ?></textarea>
 	</p>
 	</td><td>
 	<p>
-		<label for="adv-custom-field-posttext-<?php echo $number; ?>"><?php _e( 'Widget Posttext:', 'acf_widget' ) ?></label>
+		<label for="adv-custom-field-posttext-<?php echo $number; ?>"><?php _e( 'Widget Posttext:', ACFWTEXTDOMAIN ) ?></label>
 		<textarea id="adv-custom-field-posttext-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][posttext]" class="code widefat" rows="5" cols="20"><?php echo $posttext; ?></textarea>
 	</p>
 	</td></tr>
 	<tr><td>
 	<p>
-		<label for="adv-custom-field-fixedtext1a-<?php echo $number; ?>"><?php _e( 'Fixed Text 1 Always:', 'acf_widget' ) ?></label>
+		<label for="adv-custom-field-fixedtext1a-<?php echo $number; ?>"><?php _e( 'Fixed Text 1 Always:', ACFWTEXTDOMAIN ) ?></label>
 		<textarea id="adv-custom-field-fixedtext1a-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext1a]" class="code widefat" rows="5" cols="20"><?php echo $fixedtext1a; ?></textarea>
 	</p>
 	</td><td>
 	<p>
-		<label for="adv-custom-field-fixedtext1m-<?php echo $number; ?>"><?php _e( 'Fixed Text 1 Content Found:', 'acf_widget' ) ?></label>
+		<label for="adv-custom-field-fixedtext1m-<?php echo $number; ?>"><?php _e( 'Fixed Text 1 Content Found:', ACFWTEXTDOMAIN ) ?></label>
 		<textarea id="adv-custom-field-fixedtext1m-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext1m]" class="code widefat" rows="5" cols="20"><?php echo $fixedtext1m; ?></textarea>
 	</p>
 	</td></tr>
 	<tr><td>
 	<p>
-		<label for="adv-custom-field-fixedtext1n-<?php echo $number; ?>"><?php _e( 'Fixed Text 1 No Content:', 'acf_widget' ) ?></label>
+		<label for="adv-custom-field-fixedtext1n-<?php echo $number; ?>"><?php _e( 'Fixed Text 1 No Content:', ACFWTEXTDOMAIN ) ?></label>
 		<textarea id="adv-custom-field-fixedtext1n-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext1n]" class="code widefat" rows="5" cols="20"><?php echo $fixedtext1n; ?></textarea>
 	</p>
 	</td><td>
 	<p>
-		<label for="adv-custom-field-fixedtext1r-<?php echo $number; ?>"><?php _e( 'Fixed Text 1 Random Content:', 'acf_widget' ) ?></label>
+		<label for="adv-custom-field-fixedtext1r-<?php echo $number; ?>"><?php _e( 'Fixed Text 1 Random Content:', ACFWTEXTDOMAIN ) ?></label>
 		<textarea id="adv-custom-field-fixedtext1r-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext1r]" class="code widefat" rows="5" cols="20"><?php echo $fixedtext1r; ?></textarea>
 	</p>
 	</td></tr>
 	<tr><td>
 	<p>
-		<label for="adv-custom-field-fixedtext2a-<?php echo $number; ?>"><?php _e( 'Fixed Text 2 Always:', 'acf_widget' ) ?></label>
+		<label for="adv-custom-field-fixedtext2a-<?php echo $number; ?>"><?php _e( 'Fixed Text 2 Always:', ACFWTEXTDOMAIN ) ?></label>
 		<textarea id="adv-custom-field-fixedtext2a-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext2a]" class="code widefat" rows="5" cols="20"><?php echo $fixedtext2a; ?></textarea>
 	</p>
 	</td><td>
 	<p>
-		<label for="adv-custom-field-fixedtext2m-<?php echo $number; ?>"><?php _e( 'Fixed Text 2 Content Found:', 'acf_widget' ) ?></label>
+		<label for="adv-custom-field-fixedtext2m-<?php echo $number; ?>"><?php _e( 'Fixed Text 2 Content Found:', ACFWTEXTDOMAIN ) ?></label>
 		<textarea id="adv-custom-field-fixedtext2m-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext2m]" class="code widefat" rows="5" cols="20"><?php echo $fixedtext2m; ?></textarea>
 	</p>
 	</td></tr>
 	<tr><td>
 	<p>
-		<label for="adv-custom-field-fixedtext2n-<?php echo $number; ?>"><?php _e( 'Fixed Text 2 No Content:', 'acf_widget' ) ?></label>
+		<label for="adv-custom-field-fixedtext2n-<?php echo $number; ?>"><?php _e( 'Fixed Text 2 No Content:', ACFWTEXTDOMAIN ) ?></label>
 		<textarea id="adv-custom-field-fixedtext2n-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext2n]" class="code widefat" rows="5" cols="20"><?php echo $fixedtext2n; ?></textarea>
 	</p>
 	</td><td>
 	<p>
-		<label for="adv-custom-field-fixedtext2r-<?php echo $number; ?>"><?php _e( 'Fixed Text 2 Random Content:', 'acf_widget' ) ?></label>
+		<label for="adv-custom-field-fixedtext2r-<?php echo $number; ?>"><?php _e( 'Fixed Text 2 Random Content:', ACFWTEXTDOMAIN ) ?></label>
 		<textarea id="adv-custom-field-fixedtext2r-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][fixedtext2r]" class="code widefat" rows="5" cols="20"><?php echo $fixedtext2r; ?></textarea>
 	</p>
 	</td></tr>
@@ -996,75 +997,75 @@ function wp_widget_adv_custom_field_control( $widget_args ) {
     <hr />
     <h3>Content Generator (Optional)</h3>
     <p>
-        <?php _e( 'When displaying the content of a custom field, the widget evals an string building command that builds main content.  If the Content Generator field is present, the custom field content is loaded into the variable \$acfw_content and then the evald code uses the string you put in here as the basis for the widget content instead.  This allows you to generate URL\'s and other content as the string $acfw_content in the Content Generator field below is replaced by the actual content from the post.  $data1-$data5 are loaded with the values from the custom key specified by Additional Data Field 1 through 5, if values exist in the post used as the data source.  You can also use $pageurl which contains the URL of the post which was the source for the rest of the widget content.', 'acf_widget' ) ?>
+        <?php _e( 'When displaying the content of a custom field, the widget evals an string building command that builds main content.  If the Content Generator field is present, the custom field content is loaded into the variable \$acfw_content and then the evald code uses the string you put in here as the basis for the widget content instead.  This allows you to generate URL\'s and other content as the string $acfw_content in the Content Generator field below is replaced by the actual content from the post.  $data1-$data5 are loaded with the values from the custom key specified by Additional Data Field 1 through 5, if values exist in the post used as the data source.  You can also use $pageurl which contains the URL of the post which was the source for the rest of the widget content.', ACFWTEXTDOMAIN ) ?>
     </p>
     <p>
-        <?php _e( 'Additional data fields are optional.  They are used to specify custom fields, the values of which will be loaded into the variables $data1-$data5 which can be used in the content generator.', 'acf_widget' ) ?>
-        <?php _e( 'Select <i>Load all custom fields</i> or specify the custom fields you wish to load.  When selecting <i>Load all custom fields</i>, the data is loaded into the array <i>$custom</i>', 'acf_widget' ) ?>
+        <?php _e( 'Additional data fields are optional.  They are used to specify custom fields, the values of which will be loaded into the variables $data1-$data5 which can be used in the content generator.', ACFWTEXTDOMAIN ) ?>
+        <?php _e( 'Select <i>Load all custom fields</i> or specify the custom fields you wish to load.  When selecting <i>Load all custom fields</i>, the data is loaded into the array <i>$custom</i>', ACFWTEXTDOMAIN ) ?>
     </p>
     
     <p>
-        <label for="adv-custom-field-loadallcustom<? echo $number; ?>"><?php _e( 'Load all custom fields:', 'acf_widget' ) ?></label>
+        <label for="adv-custom-field-loadallcustom<? echo $number; ?>"><?php _e( 'Load all custom fields:', ACFWTEXTDOMAIN ) ?></label>
         <input type="checkbox" id="adv-custom-field-loadallcustom<? echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][loadallcustom]"  <?php if ( $loadallcustom ) echo "checked"; ?>>
-        <label for="adv-custom-field-loadallcustomloadall-<?php echo $number; ?>"><?php _e( 'All items', 'acf_widget' ) ?></label>
+        <label for="adv-custom-field-loadallcustomloadall-<?php echo $number; ?>"><?php _e( 'All items', ACFWTEXTDOMAIN ) ?></label>
         <input type="checkbox" id="adv-custom-field-loadallcustomloadall-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][loadallcustomloadall]" <?php if ( $loadallcustomloadall ) echo "checked"; ?> />
-        <label for="adv-custom-field-loadallcustomsep-<?php echo $number; ?>"><?php _e( 'Separator', 'acf_widget' ) ?></label>
+        <label for="adv-custom-field-loadallcustomsep-<?php echo $number; ?>"><?php _e( 'Separator', ACFWTEXTDOMAIN ) ?></label>
         <input id="adv-custom-field-loadallcustomsep-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][loadallcustomsep]" class="code" size="25" type="text" value="<?php echo $loadallcustomsep; ?>" />
     </p>
     <p>
-        <?php acfw_editfield( $number, __( 'Additional Data Field 1:', 'acf_widget' ), 'data1', $data1key, $data1keyloadall, $data1keysep ); ?>
+        <?php acfw_editfield( $number, __( 'Additional Data Field 1:', ACFWTEXTDOMAIN ), 'data1', $data1key, $data1keyloadall, $data1keysep ); ?>
     </p>
     <p>
-        <?php acfw_editfield( $number, __( 'Additional Data Field 2:', 'acf_widget' ), 'data2', $data2key, $data2keyloadall, $data2keysep ); ?>
+        <?php acfw_editfield( $number, __( 'Additional Data Field 2:', ACFWTEXTDOMAIN ), 'data2', $data2key, $data2keyloadall, $data2keysep ); ?>
     </p>
     <p>
-        <?php acfw_editfield( $number, __( 'Additional Data Field 3:', 'acf_widget' ), 'data3', $data3key, $data3keyloadall, $data3keysep ); ?>
+        <?php acfw_editfield( $number, __( 'Additional Data Field 3:', ACFWTEXTDOMAIN ), 'data3', $data3key, $data3keyloadall, $data3keysep ); ?>
     </p>
     <p>
-        <?php acfw_editfield( $number, __( 'Additional Data Field 4:', 'acf_widget' ), 'data4', $data4key, $data4keyloadall, $data4keysep ); ?>
+        <?php acfw_editfield( $number, __( 'Additional Data Field 4:', ACFWTEXTDOMAIN ), 'data4', $data4key, $data4keyloadall, $data4keysep ); ?>
     </p>
     <p>
-        <?php acfw_editfield( $number, __( 'Additional Data Field 5:', 'acf_widget' ), 'data5', $data5key, $data5keyloadall, $data5keysep ); ?>
+        <?php acfw_editfield( $number, __( 'Additional Data Field 5:', ACFWTEXTDOMAIN ), 'data5', $data5key, $data5keyloadall, $data5keysep ); ?>
     </p>
     
 	<p>
-		<label for="adv-custom-field-contentgen-<?php echo $number; ?>"><?php _e( 'Content Generator:' , 'acf_widget' ) ?></label>
+		<label for="adv-custom-field-contentgen-<?php echo $number; ?>"><?php _e( 'Content Generator:' , ACFWTEXTDOMAIN ) ?></label>
 		<textarea id="adv-custom-field-contentgen-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][contentgen]" rows="5" cols="40" class="code widefat"><?php echo $contentgen; ?></textarea>
 	</p>
     <p>
-        <label for="adv-custom-field-contentgenscript-<?php echo $number; ?>"><?php _e( 'Process content generator as script:', 'acf_widget' ) ?></label>
+        <label for="adv-custom-field-contentgenscript-<?php echo $number; ?>"><?php _e( 'Process content generator as script:', ACFWTEXTDOMAIN ) ?></label>
         <input type="checkbox" id="adv-custom-field-contentgenscript-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][contentgenscript]" <?php if ( $contentgenscript ) echo "checked"; ?>>
     </p>
     <p>
-        <label for="adv-custom-field-dontconvert-<?php echo $number; ?>"><?php _e( 'Do not run content generator through \'convert_chars\' filter:', 'acf_widget' ) ?></label>
+        <label for="adv-custom-field-dontconvert-<?php echo $number; ?>"><?php _e( 'Do not run content generator through \'convert_chars\' filter:', ACFWTEXTDOMAIN ) ?></label>
         <input type="checkbox" id="adv-custom-field-dontconvert-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][dontconvert]" <?php if ( $dontconvert ) echo "checked"; ?>>
     </p>
     
     <hr />
     <h3>Miscellaneous</h3>		
 	<p>
-		<label for="adv-custom-field-dorandomsingle-<?php echo $number; ?>"><?php _e( 'Show random on single post pages:', 'acf_widget' ) ?></label>
+		<label for="adv-custom-field-dorandomsingle-<?php echo $number; ?>"><?php _e( 'Show random on single post pages:', ACFWTEXTDOMAIN ) ?></label>
 		<input type="checkbox" id="adv-custom-field-dorandomsingle-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][dorandomsingle]" <?php if ( $dorandomsingle ) echo "checked"; ?>>
 	</p>
 	<p>
-		<label for="adv-custom-field-dorandomother-<?php echo $number; ?>"><?php _e( 'Show random on other pages:', 'acf_widget' ) ?></label>
+		<label for="adv-custom-field-dorandomother-<?php echo $number; ?>"><?php _e( 'Show random on other pages:', ACFWTEXTDOMAIN ) ?></label>
 		<input type="checkbox" id="adv-custom-field-dorandomother-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][dorandomother]" <?php if ( $dorandomother ) echo "checked"; ?>>
 		<input type="hidden" name="widget-adv-custom-field[<?php echo $number; ?>][submit]" value="1" />
 	</p>	
     <p>
-        <label for="adv-custom-field-dontfilter-<?php echo $number; ?>"><?php _e( 'Do not filter content:', 'acf_widget' ) ?></label>
+        <label for="adv-custom-field-dontfilter-<?php echo $number; ?>"><?php _e( 'Do not filter content:', ACFWTEXTDOMAIN ) ?></label>
         <input type="checkbox" id="adv-custom-field-dontfilter-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][dontfilter]" <?php if ( $dontfilter ) echo "checked"; ?>>
     </p>
-	<p><?php _e( 'Filtering beautifies some of the HTML output by the widget.  For example if you have picture dimensions WWWxHHH, the x will be converted to a nicer looking character.  This can result in the failure of links etc.  If this is occuring, check this box, it will turn off filtering.', 'acf_widget' ) ?></p>
+	<p><?php _e( 'Filtering beautifies some of the HTML output by the widget.  For example if you have picture dimensions WWWxHHH, the x will be converted to a nicer looking character.  This can result in the failure of links etc.  If this is occuring, check this box, it will turn off filtering.', ACFWTEXTDOMAIN ) ?></p>
 	<p>
-		<label for="adv-custom-field-widgetindex-<?php echo $number; ?>"><?php _e( 'Widget index:', 'acf_widget' ) ?></label>
+		<label for="adv-custom-field-widgetindex-<?php echo $number; ?>"><?php _e( 'Widget index:', ACFWTEXTDOMAIN ) ?></label>
 		<input maxlength="5" size="5" id="adv-custom-field-widgetindex-<?php echo $number; ?>" name="widget-adv-custom-field[<?php echo $number; ?>][widgetindex]" class="code" type="text" value="<?php echo $widgetindex; ?>" />
 	</p>
     <hr />
     <h3>Help and Assistance</h3>
     <p>
     
-        <?php printf( __( 'For assistance with ACFW, post your comments on <a href="%1$s" target="_BLANK">my blog</a>, and to read the on-line user manual visit <a href="%2$s" target="_BLANK">my wiki</a>.  <i>Thanks, AthenaOfDelphi</i>', 'acf_widget' ), ACFWBLOGLINK, ACFWWIKILINK ) ?>
+        <?php printf( __( 'For assistance with ACFW, post your comments on <a href="%1$s" target="_BLANK">my blog</a>, and to read the on-line user manual visit <a href="%2$s" target="_BLANK">my wiki</a>.  <i>Thanks, AthenaOfDelphi</i>', ACFWTEXTDOMAIN ), ACFWBLOGLINK, ACFWWIKILINK ) ?>
     </p>
     <hr />
     </div>
@@ -1112,7 +1113,7 @@ function wp_widget_adv_custom_field_register() {
 	// Variables for our widget
 	$widget_ops = array(
 			'classname'   => 'widget_adv_custom_field',
-			'description' => __( 'Display page/post custom field value for a set key', 'acf_widget' )
+			'description' => __( 'Display page/post custom field value for a set key', ACFWTEXTDOMAIN )
 		);
 	// Variables for our widget options panel
 	$control_ops = array(
@@ -1121,7 +1122,7 @@ function wp_widget_adv_custom_field_register() {
 			'id_base' => 'adv-custom-field'
 		);
 	// Variable for out widget name
-	$name = __( 'Adv. Custom Field', 'acf_widget' );
+	$name = __( 'Adv. Custom Field', ACFWTEXTDOMAIN );
 	// Assume we have no widgets in play.
 	$id = false;
 	// Since we're dealing with multiple widgets, we much register each accordingly
@@ -1164,7 +1165,7 @@ register_activation_hook( __FILE__, 'wp_widget_adv_custom_field_activation' );
 
 // Allow localization, if applicable
 $plugin_dir = dirname( plugin_basename( __FILE__ ) );
-load_plugin_textdomain( 'acf_widget', 'wp-content/plugins/' . $plugin_dir, $plugin_dir );
+load_plugin_textdomain( ACFWTEXTDOMAIN, 'wp-content/plugins/' . $plugin_dir, $plugin_dir );
 
 // Initializes the function to make our widget(s) available
 add_action( 'init', 'wp_widget_adv_custom_field_register' );
