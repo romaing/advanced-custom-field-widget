@@ -3,7 +3,7 @@ CONTRIBUTORS: athenaofdelphi, scottwallick
 TAGS: custom field, custom value, custom key, field, value, key, post meta, meta, get_post_meta, widget, sidebar, multiple widgets
 REQUIRES AT LEAST: 2.5
 TESTED UP TO: 3.0.1
-STABLE TAG: 0.93
+STABLE TAG: 0.94
 DONATE LINK: http://athena.outer-reaches.com/wiki/doku.php?id=donate
 
 The Advanced Custom Field Widget is an extension of the Custom Field Widget by Scott Wallick, and displays values of custom field keys.
@@ -31,6 +31,9 @@ In other words, just upload the `/adv-custom-field-widget/` folder and its conte
 For more information about plugins and installing them, please review the [managing plugins](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins "Installing Plugins - WordPress Codex") section of the WordPress Codex.
 
 == Changelog ==
+
+= 0.94 =
+* Re-encoded the files to try and resolve the problem with the plugin directory
 
 = 0.93 =
 * Added an option to stop the field filters putting the content generator through the 'convert_chars' filter.  When running with different locales, this appears to be converting some chars to entities (& to &#38;) with the consequence that links were being broken
