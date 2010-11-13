@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
 PLUGIN NAME: Advanced Custom Field Widget
 PLUGIN URI: http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home
