@@ -1,4 +1,4 @@
-=== Advanced Custom Field Widget ===
+﻿=== Advanced Custom Field Widget ===
 CONTRIBUTORS: athenaofdelphi, scottwallick
 TAGS: custom field, custom value, custom key, field, value, key, post meta, meta, get_post_meta, widget, sidebar, multiple widgets
 REQUIRES AT LEAST: 2.5
