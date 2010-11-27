@@ -5,16 +5,21 @@ PLUGIN URI: http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home
 DESCRIPTION: Displays the values of specified <a href="http://codex.wordpress.org/Using_Custom_Fields">custom field</a> keys, allowing post- and page-specific meta content in your sidebar. This plugin started life as a plaintxt.org experiment for WordPress by Scott Wallick, but I needed (or wanted) it to do more, so I've created this version which has more functionality than the original.  For some detailed instructions about it's use, check out my <a href="http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home">wiki</a>.  To report bugs or make feature requests, visit the Outer Reaches Studios <a href="http://mantis.outer-reaches.co.uk">issue tracker</a>, you will need to signup an account to report issues.
 AUTHOR: Christina Louise Warne
 AUTHOR URI: http://athena.outer-reaches.com/
-VERSION: 0.94
+VERSION: 0.95
 
 ------------------------------------------------------------------------------------------------------------
 Version History:-
 
 Version Date      Author                 Description
 ======= ========= ====================== ======================================
+0.95    27-Nov-10 Christina Louise Warne FIXED - Minor issue with loading all fields.  When loading all fields,
+                                            if load all items was not checked, the loader was storing the array
+                                            returned by the data loading routine.  Thanks to Ronald for
+                                            finding this one.
+------- --------- ---------------------- --------------------------------------                                                                                        
 0.94    13-Nov-10 Christina Louise Warne EDIT - Re-encoded all files to try and resolve the problem with the 
                                             plugin directory not picking up the version number
-------- --------- ---------------------- --------------------------------------                                            											
+------- --------- ---------------------- --------------------------------------                                                                                        
 0.93    06-Nov-10 Christina Louise Warne FIXED - Added an option to stop the field filters putting the content
                                             generator through the 'convert_chars' filter.  When running
                                             with different locales, this appears to be converting some chars
@@ -245,7 +250,7 @@ function acfw_loadallfields( $acfwpostid, $acfwloadall, $acfwsep, &$container )
                 if ( $acfwloadall ) {
                     $container[ $key ] = acfw_loadlist( $values, $acfwsep );
                 } else {
-                    $container[ $key ] = $value;
+                    $container[ $key ] = $value[0];
                 }
             } else {
                 $container [ $key ] = $value;
@@ -1004,7 +1009,7 @@ function wp_widget_adv_custom_field_control( $widget_args ) {
     </p>
     <p>
         <?php _e( 'Additional data fields are optional.  They are used to specify custom fields, the values of which will be loaded into the variables $data1-$data5 which can be used in the content generator.', ACFWTEXTDOMAIN ) ?>
-        <?php _e( 'Select <i>Load all custom fields</i> or specify the custom fields you wish to load.  When selecting <i>Load all custom fields</i>, the data is loaded into the array <i>$custom</i>', ACFWTEXTDOMAIN ) ?>
+        <?php _e( 'Select <i>Load all custom fields</i> or specify the custom fields you wish to load.  When selecting <i>Load all custom fields</i>, the data is loaded into fields with names $acfw_<fieldname> where <fieldname> is the custom field names with spaces and hyphens removed.', ACFWTEXTDOMAIN ) ?>
     </p>
     
     <p>

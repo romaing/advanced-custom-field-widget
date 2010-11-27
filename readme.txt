@@ -3,7 +3,7 @@ CONTRIBUTORS: athenaofdelphi, scottwallick
 TAGS: custom field, custom value, custom key, field, value, key, post meta, meta, get_post_meta, widget, sidebar, multiple widgets
 REQUIRES AT LEAST: 2.5
 TESTED UP TO: 3.0.1
-STABLE TAG: 0.94
+STABLE TAG: 0.95
 DONATE LINK: http://athena.outer-reaches.com/wiki/doku.php?id=donate
 
 The Advanced Custom Field Widget is an extension of the Custom Field Widget by Scott Wallick, and displays values of custom field keys.
@@ -31,6 +31,9 @@ In other words, just upload the `/adv-custom-field-widget/` folder and its conte
 For more information about plugins and installing them, please review the [managing plugins](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins "Installing Plugins - WordPress Codex") section of the WordPress Codex.
 
 == Changelog ==
+
+= 0.95 =
+* Fixed an issue with the 'Load all custom fields' functionality when the load all items option was not enabled
 
 = 0.94 =
 * Re-encoded the files to try and resolve the problem with the plugin directory
