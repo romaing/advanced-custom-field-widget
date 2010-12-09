@@ -1,17 +1,20 @@
 <?php
 /*
-PLUGIN NAME: Advanced Custom Field Widget
-PLUGIN URI: http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home
-DESCRIPTION: Displays the values of specified <a href="http://codex.wordpress.org/Using_Custom_Fields">custom field</a> keys, allowing post- and page-specific meta content in your sidebar. This plugin started life as a plaintxt.org experiment for WordPress by Scott Wallick, but I needed (or wanted) it to do more, so I've created this version which has more functionality than the original.  For some detailed instructions about it's use, check out my <a href="http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home">wiki</a>.  To report bugs or make feature requests, visit the Outer Reaches Studios <a href="http://mantis.outer-reaches.co.uk">issue tracker</a>, you will need to signup an account to report issues.
-AUTHOR: Christina Louise Warne
-AUTHOR URI: http://athena.outer-reaches.com/
-VERSION: 0.95
+Plugin name: Advanced Custom Field Widget
+Plugin uri: http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home
+Description: Displays the values of specified <a href="http://codex.wordpress.org/Using_Custom_Fields">custom field</a> keys, allowing post- and page-specific meta content in your sidebar. This plugin started life as a plaintxt.org experiment for WordPress by Scott Wallick, but I needed (or wanted) it to do more, so I've created this version which has more functionality than the original.  For some detailed instructions about it's use, check out my <a href="http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home">wiki</a>.  To report bugs or make feature requests, visit the Outer Reaches Studios <a href="http://mantis.outer-reaches.co.uk">issue tracker</a>, you will need to signup an account to report issues.
+Author: Christina Louise Warne
+Author uri: http://athena.outer-reaches.com/
+Version: 0.96
 
 ------------------------------------------------------------------------------------------------------------
 Version History:-
 
 Version Date      Author                 Description
 ======= ========= ====================== ======================================
+0.96    09-Dec-10 Christina Louise Warne ADDED - Dutch translation - Thanks to Ronald van der Zwan for this
+                                            translation
+------- --------- ---------------------- --------------------------------------                                                                                        
 0.95    27-Nov-10 Christina Louise Warne FIXED - Minor issue with loading all fields.  When loading all fields,
                                             if load all items was not checked, the loader was storing the array
                                             returned by the data loading routine.  Thanks to Ronald for
