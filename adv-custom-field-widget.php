@@ -1,124 +1,14 @@
 <?php
 /*
-PLUGIN NAME: Advanced Custom Field Widget
-PLUGIN URI: http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home
-DESCRIPTION: Displays the values of specified <a href="http://codex.wordpress.org/Using_Custom_Fields">custom field</a> keys, allowing post- and page-specific meta content in your sidebar. This plugin started life as a plaintxt.org experiment for WordPress by Scott Wallick, but I needed (or wanted) it to do more, so I've created this version which has more functionality than the original.  For some detailed instructions about it's use, check out my <a href="http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home">wiki</a>.  To report bugs or make feature requests, visit the Outer Reaches Studios <a href="http://mantis.outer-reaches.co.uk">issue tracker</a>, you will need to signup an account to report issues.
-AUTHOR: Christina Louise Warne
-AUTHOR URI: http://athena.outer-reaches.com/
-VERSION: 0.94
+Plugin name: Advanced Custom Field Widget
+Plugin uri: http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home
+Description: Displays the values of specified <a href="http://codex.wordpress.org/Using_Custom_Fields">custom field</a> keys, allowing post- and page-specific meta content in your sidebar. This plugin started life as a plaintxt.org experiment for WordPress by Scott Wallick, but I needed (or wanted) it to do more, so I've created this version which has more functionality than the original.  For some detailed instructions about it's use, check out my <a href="http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home">wiki</a>.  To report bugs or make feature requests, visit the Outer Reaches Studios <a href="http://mantis.outer-reaches.co.uk">issue tracker</a>, you will need to signup an account to report issues.
+Author: Christina Louise Warne
+Author uri: http://athena.outer-reaches.com/
+Version: 0.97
+*/
 
-------------------------------------------------------------------------------------------------------------
-Version History:-
-
-Version Date      Author                 Description
-======= ========= ====================== ======================================
-0.94    13-Nov-10 Christina Louise Warne EDIT - Re-encoded all files to try and resolve the problem with the 
-                                            plugin directory not picking up the version number
-------- --------- ---------------------- --------------------------------------                                            											
-0.93    06-Nov-10 Christina Louise Warne FIXED - Added an option to stop the field filters putting the content
-                                            generator through the 'convert_chars' filter.  When running
-                                            with different locales, this appears to be converting some chars
-                                            to entities (& to &#38;) with the consequence that links were
-                                            being broken
-                                         ADDED - ACFW shortcode.  The widget config panel provides the widget
-                                            instance ID.  Add [acfw id="<INSTANCEID>"] to a post and the 
-                                            widget will be rendered in the post
-                                         ADDED - acfw(id) function.  You can now render widgets directly in
-                                            a theme.  Simply add acfw(<INSTANCEID>); to the theme to render
-                                            the widget directly in the theme
-                                         ADDED - Custom sidebar to hold widgets for use by ACFW shortcode and
-                                            function
-                                         ADDED - Widget instance ID display to configuration panel (for use
-                                            with ACFW shortcode and function)
-                                         ADDED - Enhanced separator functionality allowing user to specify
-                                            a different separator for the last item and an ending marker
-                                            if required (refer to the usermanual for more information)
-------- --------- ---------------------- --------------------------------------                                            
-0.92    24-Oct-10 Christina Louise Warne FIXED - Code to replace the widgets use of the main loop query was
-                                            faulty, and failed when trying to display the widget on pages
-                                            with more than one post.  This has been fixed in this version
-------- --------- ---------------------- --------------------------------------                                            
-0.91    24-Oct-10 Christina Louise Warne ADDED - Ability for widget to load all custom fields into variables
-                                            $acfw_<FIELDNAME> for use in the content generator (main key
-                                            field is still loaded in $acfw_content)
-                                         EDIT - Removed previous version comments in an effort to
-                                            tidy up the code base slightly
-                                         FIXED - This version can now load values from multiple instances
-                                            of specified fields.  The separator used can be specified
-                                         EDIT - Revised control panel layout to try and make it clearer.
-                                            This has resulted in some major changes to the translation
-                                            file
-                                         EDIT - Removed a deprecated function from the configuration panel,
-                                            please check all configuration values after upgrading to this
-                                            version to ensure that HTML entities etc. are properly stored
-                                         FIXED - When using the widget within the main loop, the page
-                                            would continue on and on as the widget resets the main query
-                                            resulting in the loop not being able to find the end of the
-                                            list
-                                         ADDED - Ability to process content generator as a script which
-                                            should populate the variable '$content'
-------- --------- ---------------------- --------------------------------------
-0.83    21-Aug-10 Christina Louise Warne EDIT - Updated version and WordPress version support information
-------- --------- ---------------------- --------------------------------------
-0.82    21-Dec-09 Christina Louise Warne FIXED - Following upgrade to WordPress 2.9, ACFW was displaying
-                                            widgets without content on single post pages.
-------- --------- ---------------------- --------------------------------------                                            
-0.81    31-Jul-09 Christina Louise Warne FIXED - When using widget index field, widgets that didn't have
-                                            data for their index were displaying the first item from the
-                                            list
-------- --------- ---------------------- --------------------------------------                                            
-0.8     17-Jul-09 Christina Louise Warne ADDED - Widget index field.  This field allows you to have multiple
-                                            widgets on the page all linked to the same field (in that case,
-                                            only the widget with index 1 will display, even if the content
-                                            randomiser is selected, widgets with indexes other than 1 will
-                                            be blocked if there is no multiple linkto field specified.  To
-                                            use the indexed widgets, all you do is specify the primary key
-                                            field as you do normally (lets say we have the field AMAZON).
-                                            Then on the page where you want the multiple widgets, you would
-                                            specify AMAZON-linkto=x|y|z where x,y and z are the page IDs of
-                                            the source posts
-                                         ADDED - Additional data fields 2 to 5
-                                         ADDED - $pagetitle for use in content generator.  Contains title
-                                            of the source post
-                                         FIXED - In some cases, the content generator was leaving slashes in
-                                            the strings.  I believe it is no longer necessary to 'escape'
-                                            strings in the custom fields or the content generator as I
-                                            think it's all handled
-------- --------- ---------------------- --------------------------------------
-0.7     26-Jun-09 Christina Louise Warne ADDED - Additional data field 1.  This field does nothing except
-                                            get loaded from the specified custom field, if it exists.  It
-                                            is primarily for use in the content generator.  This ones for
-                                            you Bill.
-------- --------- ---------------------- --------------------------------------
-0.6     27-Mar-09 Christina Louise Warne ADDED - Widget 'Content Generator'.  This field allows complex
-                                            content to be generated with PHP.  Essentially the content is
-                                            eval'd and the result is dumped into the space where the field
-                                            content would normally go.
-------- --------- ---------------------- --------------------------------------
-0.5	    02-Mar-09 Christina Louise Warne FIX - Fixed issue where some widgets were breaking the widget
-                                            More specifically, if a widget modified the $post variable,
-                                            ACFW would display (or not) data relating to the post left
-                                            in the $post variable.  A fix has been implemented whereby
-                                            this widget re-initialises the main wp_query used by the main
-                                            loop and then reinitialises $post with the result
-------- --------- ---------------------- --------------------------------------
-0.4     10-Feb-09 Christina Louise Warne FIX - Removal of options now only occurs when the plugin is 
-                                            uninstalled (via uninstall.php)
-                                         FIX - Fixed text domain to acf_widget
-------- --------- ---------------------- --------------------------------------
-0.3     23-Dec-08 Christina Louise Warne ADDED - Add custom field '<KEY>-linkto' and specify a page ID to
-                                            have the current page load the specified cfield content from the
-                                            specified page.  This takes priority over acfw-linkto.
-------- --------- ---------------------- --------------------------------------
-0.2     05-Dec-08 Christina Louise Warne FIX - Widget was not displaying content for pages (only posts)
-                                         ADDED - Add custom field 'acfw-linkto' and specify a page ID to
-                                            have the current page load it's fields from the specified page
-------- --------- ---------------------- --------------------------------------
-0.1     Nov 2008  Scott Allan Wallick    Original Version
-                  with heavy mods by
-                  Christina Louise Warne
-------------------------------------------------------------------------------------------------------------
-
+/*
 ADVANCED CUSTOM FIELD WIDGET
 by Christina Louise Warne (aka AthenaOfDelphi), http://athena.outer-reaches.com/
 from The Outer Reaches, http://www.outer-reaches.com/
@@ -139,7 +29,6 @@ See the GNU General Public License for details.
 You should have received a copy of the GNU General Public License
 along with ADVANCED CUSTOM FIELD WIDGET.
 If not, see www.gnu.org/licenses/
-
 */
 
 define( 'ACFWBLOGLINK', 'http://athena.outer-reaches.com/wp/index.php/wiki/advanced-custom-field-widget' );
@@ -245,7 +134,7 @@ function acfw_loadallfields( $acfwpostid, $acfwloadall, $acfwsep, &$container )
                 if ( $acfwloadall ) {
                     $container[ $key ] = acfw_loadlist( $values, $acfwsep );
                 } else {
-                    $container[ $key ] = $value;
+                    $container[ $key ] = $value[0];
                 }
             } else {
                 $container [ $key ] = $value;
@@ -1004,7 +893,7 @@ function wp_widget_adv_custom_field_control( $widget_args ) {
     </p>
     <p>
         <?php _e( 'Additional data fields are optional.  They are used to specify custom fields, the values of which will be loaded into the variables $data1-$data5 which can be used in the content generator.', ACFWTEXTDOMAIN ) ?>
-        <?php _e( 'Select <i>Load all custom fields</i> or specify the custom fields you wish to load.  When selecting <i>Load all custom fields</i>, the data is loaded into the array <i>$custom</i>', ACFWTEXTDOMAIN ) ?>
+        <?php _e( 'Select <i>Load all custom fields</i> or specify the custom fields you wish to load.  When selecting <i>Load all custom fields</i>, the data is loaded into fields with names $acfw_<fieldname> where <fieldname> is the custom field names with spaces and hyphens removed.', ACFWTEXTDOMAIN ) ?>
     </p>
     
     <p>
