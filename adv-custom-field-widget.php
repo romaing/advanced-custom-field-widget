@@ -5,7 +5,7 @@ Plugin uri: http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home
 Description: Displays the values of specified <a href="http://codex.wordpress.org/Using_Custom_Fields">custom field</a> keys, allowing post- and page-specific meta content in your sidebar. This plugin started life as a plaintxt.org experiment for WordPress by Scott Wallick, but I needed (or wanted) it to do more, so I've created this version which has more functionality than the original.  For some detailed instructions about it's use, check out my <a href="http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home">wiki</a>.  To report bugs or make feature requests, visit the Outer Reaches Studios <a href="http://mantis.outer-reaches.co.uk">issue tracker</a>, you will need to signup an account to report issues.
 Author: Christina Louise Warne
 Author uri: http://athena.outer-reaches.com/
-Version: 0.97
+Version: 0.98
 */
 
 /*
@@ -174,7 +174,7 @@ function acfw_editfield( $number, $mainlabel, $keyid, $datakey, $datakeyloadall,
 }
 
 // Run the provided data through the required filters
-function acfw_filterfield( $dontfilter, $dontconvert, &$data)
+function acfw_filterfield( $dontfilter, $dontconvert, &$data, $doreplace = false )
 {
     if ( !$dontconvert ) {
         // Convert chars
@@ -190,9 +190,11 @@ function acfw_filterfield( $dontfilter, $dontconvert, &$data)
     }
     $data = addslashes( $data );
     
-    $data = str_replace( chr(13).chr(10), chr(10), $data );
-    $data = str_replace( chr(10).chr(13), chr(10), $data );
-    $data = str_replace( chr(10), '\n', $data );
+    if ( $doreplace ) {
+        $data = str_replace( chr(13).chr(10), chr(10), $data );
+        $data = str_replace( chr(10).chr(13), chr(10), $data );
+        $data = str_replace( chr(10), '\n', $data );
+    }
 }
 
 // Widget Display Function for the Advanced Custom Field Widget
@@ -478,6 +480,7 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
 		// If we have a content generator, then perform the required
         // filtering on the data
 		if ( isset( $contentgen ) && $contentgen != '' ) {
+            
             // Load the additional data fields for the content generator
             if ( isset( $loadothers ) ) {
                 if ( $loadallcustom ) {
@@ -525,7 +528,7 @@ function wp_widget_adv_custom_field( $args, $widget_args = 1 ) {
         if ( $contentgenscript ) {
             $cvalue=str_replace('\n',chr(13).chr(10),$cvalue);
         } else {
-            acfw_filterfield( $dontfilter, $dontconvert, $cvalue );
+            acfw_filterfield( $dontfilter, $dontconvert, $cvalue, true );
         }
 	
 		// Yes? Then let's make a widget. Open it.
