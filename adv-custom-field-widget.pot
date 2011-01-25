@@ -9,7 +9,7 @@
 
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.94\n"
+"Project-Id-Version: 0.99\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/advanced-custom-field-widget\n"
 "POT-Creation-Date: 2010-11-07 00:55+0000\n"
 "PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
@@ -131,7 +131,8 @@ msgstr ""
 msgid ""
 "Select <i>Load all custom fields</i> or specify the custom fields you wish "
 "to load.  When selecting <i>Load all custom fields</i>, the data is loaded "
-"into the array <i>$custom</i>"
+"into fields with names $acfw_<fieldname> where <fieldname> is the custom "
+"field names with spaces and hyphens removed."
 msgstr ""
 
 #: adv-custom-field-widget.php:1007
