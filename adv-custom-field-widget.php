@@ -34,7 +34,7 @@ If not, see www.gnu.org/licenses/
 define( 'ACFWBLOGLINK', 'http://athena.outer-reaches.com/wp/index.php/wiki/advanced-custom-field-widget' );
 define( 'ACFWWIKILINK', 'http://athena.outer-reaches.com/wiki/doku.php?id=projects:acfw:home' );
 define( 'ACFWTEXTDOMAIN', 'adv-custom-field-widget' );
-define( 'CODEXCUSTOMFIELDLINK', 'http://codex.wordpress.org/Using_Custom_Fields' );
+define( 'CODECUSTOMFIELDLINK', 'http://codex.wordpress.org/Using_Custom_Fields' );
 
 // Load a list of values for a field
 function acfw_loadlist( $values, $acfwsep ) {
